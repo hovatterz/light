@@ -1,8 +1,8 @@
-#include "QuadTreeNode.h"
-#include "QuadTree.h"
+#include "LTBL/QuadTreeNode.h"
+#include "LTBL/QuadTree.h"
 #include <assert.h>
 
-#include "SFML_OpenGL.h"
+#include "LTBL/SFML_OpenGL.h"
 
 using namespace qdt;
 

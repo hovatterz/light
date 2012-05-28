@@ -1,6 +1,6 @@
-#include "LightSystem.h"
+#include "LTBL/LightSystem.h"
 
-#include "ShadowFin.h"
+#include "LTBL/ShadowFin.h"
 
 #include <assert.h>
 

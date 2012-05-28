@@ -1,6 +1,6 @@
-#include "QuadTree.h"
+#include "LTBL/QuadTree.h"
 
-#include "SFML_OpenGL.h"
+#include "LTBL/SFML_OpenGL.h"
 
 using namespace qdt;
 

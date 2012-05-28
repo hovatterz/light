@@ -18,5 +18,30 @@ include_directories(${GLEW_INCLUDE_PATH})
 # Find SFML
 find_package(SFML 2.0 REQUIRED system window graphics network audio)
 
-add_subdirectory(light lib)
+# Project
+set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib")
+set(light_SRC
+    src/Constructs.cpp
+    src/ConvexHull.cpp
+    src/Light.cpp
+    src/LightSystem.cpp
+    src/Light_Beam.cpp
+    src/QuadTree.cpp
+    src/QuadTreeNode.cpp
+    src/QuadTreeOccupant.cpp
+    src/SFML_OpenGL.cpp
+    src/ShadowFin.cpp)
+include_directories("include")
+
+add_library(ltbl SHARED ${light_SRC})
+target_link_libraries(ltbl ${SFML_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARY})
+install(
+    TARGETS ltbl
+    RUNTIME DESTINATION bin COMPONENT bin
+    LIBRARY DESTINATION lib COMPONENT bin
+    ARCHIVE DESTINATION lib COMPONENT dev
+)
+install(DIRECTORY include DESTINATION .)
+
+# Sample
 add_subdirectory(sample bin)

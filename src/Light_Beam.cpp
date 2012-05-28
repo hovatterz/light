@@ -1,6 +1,6 @@
-#include "Light_Beam.h"
+#include "LTBL/Light_Beam.h"
 
-#include "ShadowFin.h"
+#include "LTBL/ShadowFin.h"
 
 #include <assert.h>
 

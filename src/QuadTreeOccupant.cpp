@@ -1,14 +1,14 @@
-#include "QuadTreeOccupant.h"
+#include "LTBL/QuadTreeOccupant.h"
 
-#include "QuadTreeNode.h"
-#include "QuadTree.h"
+#include "LTBL/QuadTreeNode.h"
+#include "LTBL/QuadTree.h"
 
-#include "SFML_OpenGL.h"
+#include "LTBL/SFML_OpenGL.h"
 
 #include <assert.h>
 
-#include "Light.h"
-#include "ConvexHull.h"
+#include "LTBL/Light.h"
+#include "LTBL/ConvexHull.h"
 
 using namespace qdt;
 

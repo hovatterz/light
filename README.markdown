@@ -19,6 +19,10 @@ You can then say `bin/sample` to run the sample. I recommend using `buid/`
 as your out of source build directory, because it is already on the
 `.gitignore`.
 
+
+## Installing
+`make install`
+
 ## Contributing
 Stick with the style of the library as much as possible. Check out a 
 feature branch and make your commits. Rebase against `origin/master` and
