@@ -4,6 +4,25 @@
 
 #include <SFML/Graphics.hpp>
 
+unsigned int GetFrameRate(const sf::Uint32 time)
+{
+  static unsigned int frameCounter = 0;
+  static unsigned int frameTime = 0;
+  static unsigned int fps = 0;
+
+  ++frameCounter;
+
+  frameTime += time;
+  if (frameTime >= 1000)
+  {
+    fps = frameCounter;
+    frameCounter = 0;
+    frameTime -= 1000;
+  }
+
+  return fps;
+}
+
 int main(int argc, char* args[])
 { 
 	sf::VideoMode vidMode;
@@ -51,16 +70,33 @@ int main(int argc, char* args[])
 	testHull->CalculateNormals();
 	testHull->GenerateAABB();
 
-	testHull->SetWorldCenter(Vec2f(300.0f, 300.0f));
+	testHull->SetWorldCenter(Vec2f(100.0f, 100.0f));
 
 	ls.AddConvexHull(testHull);
 
-	// ------------------------- Game Loop --------------------------
+	// Create a hull by loading it from a file
+	ltbl::ConvexHull* testHull2 = new ltbl::ConvexHull();
 
+	if(!testHull2->LoadShape("data/testShape.txt"))
+		abort();
+
+	// Pre-calculate certain aspects
+	testHull2->CalculateNormals();
+	testHull2->GenerateAABB();
+
+	testHull2->SetWorldCenter(Vec2f(300.0f, 300.0f));
+
+	ls.AddConvexHull(testHull2);
+
+	// ------------------------- Game Loop --------------------------
+  
+  sf::Text fpsText("0 FPS", sf::Font::getDefaultFont(), 15);
+  fpsText.setPosition(10, 10);
+
+  sf::Clock clock;
 	sf::Event eventStructure;
 
 	bool quit = false;
-
 	while(!quit)
 	{
 		while(win.pollEvent(eventStructure))
@@ -88,7 +124,16 @@ int main(int argc, char* args[])
 		// Draw the lights
 		ls.RenderLightTexture(0.0f);
 
+    win.draw(fpsText);
+
 		win.display();
+
+    const sf::Uint32 elapsedTime = clock.restart().asMilliseconds();
+    unsigned int fps = GetFrameRate(elapsedTime);
+
+    char buffer[64];
+    snprintf(buffer, sizeof(buffer), "%d FPS", fps);
+    fpsText.setString(buffer);
 	}
 
 	win.close();
