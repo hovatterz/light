@@ -709,6 +709,8 @@ void LightSystem::RenderLightTexture(float renderDepth)
 	sf::Vector2f viewSize(view.getSize());
 	sf::Vector2u viewSizeui(static_cast<unsigned int>(viewSize.x), static_cast<unsigned int>(viewSize.y));
 
+	pWin->resetGLStates();
+
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);		
 
 	glClearDepth(1.0f);

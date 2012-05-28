@@ -46,6 +46,9 @@ int main(int argc, char* args[])
 	sf::Sprite backgroundSprite(backgroundImage);
 	backgroundSprite.setTextureRect(sf::IntRect(0, 0, vidMode.width, vidMode.height));
 
+  sf::RectangleShape testShape(sf::Vector2f(10, 10));
+  testShape.setPosition(30, 30);
+
 	// --------------------- Light System Setup ---------------------
 
 	ltbl::LightSystem ls(qdt::AABB(Vec2f(0.0f, 0.0f), Vec2f(static_cast<float>(vidMode.width), static_cast<float>(vidMode.height))), &win);
@@ -117,6 +120,8 @@ int main(int argc, char* args[])
 
 		// Draw the background
 		win.draw(backgroundSprite);
+
+    win.draw(testShape);
 
 		// Calculate the lights
 		ls.RenderLights();
