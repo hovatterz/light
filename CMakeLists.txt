@@ -18,4 +18,5 @@ include_directories(${GLEW_INCLUDE_PATH})
 # Find SFML
 find_package(SFML 2.0 REQUIRED system window graphics network audio)
 
-add_subdirectory(src bin)
+add_subdirectory(light lib)
+add_subdirectory(sample bin)
