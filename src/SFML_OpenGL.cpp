@@ -28,7 +28,7 @@ namespace ltbl
 		float halfHeight = Texture.getSize().y / 2.0f;
 
 		// Bind the texture
-		Texture.bind();
+    sf::Texture::bind(&Texture);
 
 		// Have to render upside-down because SFML loads the Textures upside-down
 		glBegin(GL_QUADS);

@@ -461,7 +461,7 @@ void LightSystem::RenderLights()
 	CameraSetup();
 
 	// Bind shadow texture for use later
-	softShadowTexture.bind();
+  sf::Texture::bind(&softShadowTexture);
 
 	renderTexture.setActive();
 	renderTexture.clear(ambientColor);
@@ -546,7 +546,7 @@ void LightSystem::RenderLights()
 				pLight->pStaticTexture->setActive();
 
 				// For use later
-				softShadowTexture.bind();
+        sf::Texture::bind(&softShadowTexture);
 
 				staticTextureOffset = pLight->center - pLight->aabb.lowerBound;
 
@@ -614,7 +614,7 @@ void LightSystem::RenderLights()
 
 				renderTexture.setActive();
 
-				lightTemp.getTexture().bind();
+        sf::Texture::bind(&lightTemp.getTexture());
 
 				// Save the camera matrix
 				glLoadIdentity();
@@ -634,7 +634,7 @@ void LightSystem::RenderLights()
 
 				renderTexture.setActive();
 
-				pLight->pStaticTexture->getTexture().bind();
+        sf::Texture::bind(&pLight->pStaticTexture->getTexture());
 
 				glTranslatef(pLight->center.x - staticTextureOffset.x, pLight->center.y - staticTextureOffset.y, 0.0f);
 
@@ -656,7 +656,7 @@ void LightSystem::RenderLights()
 		else
 		{
 			// Render existing texture
-			pLight->pStaticTexture->getTexture().bind();
+      sf::Texture::bind(&pLight->pStaticTexture->getTexture());
 
 			Vec2f staticTextureOffset = pLight->center - pLight->aabb.lowerBound;
 
@@ -725,7 +725,7 @@ void LightSystem::RenderLightTexture(float renderDepth)
 	glEnable(GL_TEXTURE_2D); 
 	glDisable(GL_DEPTH_TEST);
 
-	renderTexture.getTexture().bind();
+  sf::Texture::bind(&renderTexture.getTexture());
 
 	// Set up color function to multiply the existing color with the render texture color
 	glBlendFuncSeparate(GL_ZERO, GL_SRC_COLOR, GL_ONE, GL_ONE_MINUS_SRC_ALPHA); // Seperate allows you to set color and alpha functions seperately
