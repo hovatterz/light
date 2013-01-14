@@ -24,7 +24,7 @@ unsigned int GetFrameRate(const sf::Uint32 time)
 }
 
 int main(int argc, char* args[])
-{ 
+{
 	sf::VideoMode vidMode;
 	vidMode.width = 800;
 	vidMode.height = 600;
@@ -92,7 +92,7 @@ int main(int argc, char* args[])
 	ls.AddConvexHull(testHull2);
 
 	// ------------------------- Game Loop --------------------------
-  
+
   sf::Font font;
   if (!font.loadFromFile("data/sansation.ttf"))
     abort();
