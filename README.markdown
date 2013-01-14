@@ -15,7 +15,7 @@ Do an out of source build. Specifically:
     cmake ..
     make
 
-You can then say `bin/sample` to run the sample. I recommend using `buid/`
+You can then say `bin/sample` to run the sample. I recommend using `build/`
 as your out of source build directory, because it is already on the
 `.gitignore`.
 
