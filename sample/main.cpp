@@ -93,7 +93,11 @@ int main(int argc, char* args[])
 
 	// ------------------------- Game Loop --------------------------
   
-  sf::Text fpsText("0 FPS", sf::Font::getDefaultFont(), 15);
+  sf::Font font;
+  if (!font.loadFromFile("data/sansation.ttf"))
+    abort();
+
+  sf::Text fpsText("0 FPS", font, 15);
   fpsText.setPosition(10, 10);
 
   sf::Clock clock;
