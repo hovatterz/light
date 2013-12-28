@@ -11,102 +11,100 @@
 
 namespace ltbl
 {
-	// The radius value of a light is larger than what one actually 
-	// sees in the render of the light. Therefore, this multiplier 
-	// can be used to "cut down" the radius a bit more for more culling.
-	const float lightRadiusCullMultiplier = 1.0f;
-	const float renderDepth = 50.0f;
+// The radius value of a light is larger than what one actually 
+// sees in the render of the light. Therefore, this multiplier 
+// can be used to "cut down" the radius a bit more for more culling.
+const float lightRadiusCullMultiplier = 1.0f;
+const float renderDepth = 50.0f;
 
-	const int maxFins = 2;
+const int maxFins = 2;
 
-	class EmissiveLight :
-		public qdt::QuadTreeOccupant
-	{
-	private:
-		sf::Texture* text;
+class EmissiveLight : public qdt::QuadTreeOccupant {
+ private:
+  sf::Texture* text;
 
-		Vec2f center;
-		Vec2f scale;
+  Vec2f center;
+  Vec2f scale;
 
-	public:
-		EmissiveLight();
+ public:
+  EmissiveLight();
 
-		void SetTexture(sf::Texture* texture);
-		void Render();
+  void SetTexture(sf::Texture* texture);
+  void Render();
 
-		void SetCenter(const Vec2f &newCenter);
-		void SetScale(const Vec2f &newScale);
-		void IncCenter(const Vec2f &increment);
+  void SetCenter(const Vec2f &newCenter);
+  void SetScale(const Vec2f &newScale);
+  void IncCenter(const Vec2f &increment);
 
-		Vec2f GetCenter();
-		Vec2f GetScale();
+  Vec2f GetCenter();
+  Vec2f GetScale();
 
-		void Update();
-	};
+  void Update();
+};
 
-	class LightSystem
-	{
-	private:
-		sf::RenderWindow* pWin;
+class LightSystem
+{
+ private:
+  sf::RenderWindow* pWin;
 
-		std::unordered_set<Light*> lights;
-	
-		std::unordered_set<EmissiveLight*> emissiveLights;
+  std::unordered_set<Light*> lights;
 
-		std::unordered_set<ConvexHull*> convexHulls;
+  std::unordered_set<EmissiveLight*> emissiveLights;
 
-		std::vector<Light*> lightsToPreBuild;
+  std::unordered_set<ConvexHull*> convexHulls;
 
-		std::auto_ptr<qdt::QuadTree> lightTree;
-		std::auto_ptr<qdt::QuadTree> hullTree;
-		std::auto_ptr<qdt::QuadTree> emissiveTree;
+  std::vector<Light*> lightsToPreBuild;
 
-		sf::RenderTexture renderTexture;
-		sf::RenderTexture lightTemp;
+  std::auto_ptr<qdt::QuadTree> lightTree;
+  std::auto_ptr<qdt::QuadTree> hullTree;
+  std::auto_ptr<qdt::QuadTree> emissiveTree;
 
-		std::vector<ShadowFin> finsToRender;
+  sf::RenderTexture renderTexture;
+  sf::RenderTexture lightTemp;
 
-		sf::Texture softShadowTexture;
+  std::vector<ShadowFin> finsToRender;
 
-		int prebuildTimer;
+  sf::Texture softShadowTexture;
 
-		void MaskShadow(Light* light, ConvexHull* convexHull, float depth);
-		void AddExtraFins(const ConvexHull &hull, ShadowFin* fin, const Light &light, Vec2f &mainUmbra, Vec2f &mainUmbraRoot, int boundryIndex, bool wrapCW);
-		void CameraSetup();
-		void SetUp(const qdt::AABB &region);
+  int prebuildTimer;
 
-	public:
-		sf::View view;
-		sf::Color ambientColor;
-		bool checkForHullIntersect;
+  void MaskShadow(Light* light, ConvexHull* convexHull, float depth);
+  void AddExtraFins(const ConvexHull &hull, ShadowFin* fin, const Light &light, Vec2f &mainUmbra, Vec2f &mainUmbraRoot, int boundryIndex, bool wrapCW);
+  void CameraSetup();
+  void SetUp(const qdt::AABB &region);
 
-		LightSystem(const qdt::AABB &region, sf::RenderWindow* pRenderWindow);
-		~LightSystem();
+ public:
+  sf::View view;
+  sf::Color ambientColor;
+  bool checkForHullIntersect;
 
-		// All objects are controller through pointer, but these functions return indices that allow easy removal
-		void AddLight(Light* newLight);
-		void AddConvexHull(ConvexHull* newConvexHull);
-		void AddEmissiveLight(EmissiveLight* newEmissiveLight);
+  LightSystem(const qdt::AABB &region, sf::RenderWindow* pRenderWindow);
+  ~LightSystem();
 
-		void RemoveLight(Light* pLight);
-		void RemoveConvexHull(ConvexHull* pHull);
-		void RemoveEmissiveLight(EmissiveLight* pEmissiveLight);
+  // All objects are controller through pointer, but these functions return indices that allow easy removal
+  void AddLight(Light* newLight);
+  void AddConvexHull(ConvexHull* newConvexHull);
+  void AddEmissiveLight(EmissiveLight* newEmissiveLight);
 
-		void BuildLight(Light* pLight);
+  void RemoveLight(Light* pLight);
+  void RemoveConvexHull(ConvexHull* pHull);
+  void RemoveEmissiveLight(EmissiveLight* pEmissiveLight);
 
-		// Clears all lights
-		void ClearLights();
+  void BuildLight(Light* pLight);
 
-		// Clears all hulls
-		void ClearConvexHulls();
+  // Clears all lights
+  void ClearLights();
 
-		void ClearEmissiveLights();
+  // Clears all hulls
+  void ClearConvexHulls();
 
-		// Renders lights to the light texture
-		void RenderLights();
+  void ClearEmissiveLights();
 
-		void RenderLightTexture(float renderDepth = 1.0f);
-	};
+  // Renders lights to the light texture
+  void RenderLights();
+
+  void RenderLightTexture(float renderDepth = 1.0f);
+};
 }
 
 #endif

@@ -6,18 +6,17 @@
 
 namespace ltbl
 {
-	class ShadowFin
-	{
-	public:
-		Vec2f rootPos;
-		Vec2f umbra;
-		Vec2f penumbra;
+class ShadowFin {
+ public:
+  Vec2f rootPos;
+  Vec2f umbra;
+  Vec2f penumbra;
 
-		ShadowFin();
-		~ShadowFin();
+  ShadowFin();
+  ~ShadowFin();
 
-		void Render(float depth);
-	};
+  void Render(float depth);
+};
 }
 
 #endif

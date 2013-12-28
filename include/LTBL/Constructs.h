@@ -4,51 +4,48 @@
 #include <iostream>
 #include <math.h>
 
-struct Color3f
-{
-	float r, g, b;
+struct Color3f {
+  float r, g, b;
 
-	Color3f();
-	Color3f(float R, float G, float B);
+  Color3f();
+  Color3f(float R, float G, float B);
 };
 
-class Point2i
-{
-public:
-	int x, y;
+class Point2i {
+ public:
+  int x, y;
 
-	Point2i(int X, int Y);
-	Point2i();
-	
-	bool operator==(const Point2i &other) const;
+  Point2i(int X, int Y);
+  Point2i();
+
+  bool operator==(const Point2i &other) const;
 };
 
-class Vec2f 
-{
-public:
-	float x, y;
+class Vec2f {
+ public:
+  float x, y;
 
-	Vec2f();
-	Vec2f(float X, float Y);
+  Vec2f();
+  Vec2f(float X, float Y);
 
-	bool operator==(const Vec2f &other) const;
-		
-	Vec2f operator*(float scale) const;
-	Vec2f operator/(float scale) const;
-	Vec2f operator+(const Vec2f &other) const;
-	Vec2f operator-(const Vec2f &other) const;
-	Vec2f operator-() const;
-		
-	const Vec2f &operator*=(float scale);
-	const Vec2f &operator/=(float scale);
-	const Vec2f &operator+=(const Vec2f &other);
-	const Vec2f &operator-=(const Vec2f &other);
-		
-	float magnitude() const;
-	float magnitudeSquared() const;
-	Vec2f normalize() const;
-	float dot(const Vec2f &other) const;
-	float cross(const Vec2f &other) const;
+  bool operator==(const Vec2f &other) const;
+
+  Vec2f operator*(float scale) const;
+  Vec2f operator/(float scale) const;
+  Vec2f operator+(const Vec2f &other) const;
+  Vec2f operator-(const Vec2f &other) const;
+  Vec2f operator-() const;
+
+  const Vec2f &operator*=(float scale);
+  const Vec2f &operator/=(float scale);
+  const Vec2f &operator+=(const Vec2f &other);
+  const Vec2f &operator-=(const Vec2f &other);
+
+  float magnitude() const;
+  float magnitudeSquared() const;
+  Vec2f normalize() const;
+  float dot(const Vec2f &other) const;
+  float cross(const Vec2f &other) const;
 };
 
 Vec2f operator*(float scale, const Vec2f &v);

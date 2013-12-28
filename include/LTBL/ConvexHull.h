@@ -8,66 +8,64 @@
 
 namespace ltbl
 {
-	template<class T> T Wrap(T val, T size)
-	{
-		if((signed)val < 0)
-			return val + size;
+template<class T> T Wrap(T val, T size)
+{
+  if((signed)val < 0)
+    return val + size;
 
-		if(val >= size)
-			return val - size;
+  if(val >= size)
+    return val - size;
 
-		return val;
-	}
+  return val;
+}
 
-	struct ConvexHullVertex
-	{
-		Vec2f position;
+struct ConvexHullVertex
+{
+  Vec2f position;
 
-		// Other information can be added later
-	};
+  // Other information can be added later
+};
 
-	class ConvexHull :
-		public qdt::QuadTreeOccupant
-	{	
-	private:
-		bool aabbGenerated;
+class ConvexHull : public qdt::QuadTreeOccupant
+{
+ private:
+  bool aabbGenerated;
 
-		Vec2f worldCenter;
+  Vec2f worldCenter;
 
-	public:
-		bool updateRequired;
+ public:
+  bool updateRequired;
 
-		bool render;
+  bool render;
 
-		std::vector<ConvexHullVertex> vertices;
-		std::vector<Vec2f> normals;
+  std::vector<ConvexHullVertex> vertices;
+  std::vector<Vec2f> normals;
 
-		float shadowDepthOffset;
+  float shadowDepthOffset;
 
-		ConvexHull();
+  ConvexHull();
 
-		void CenterHull();
-		bool LoadShape(const char* fileName);
-		Vec2f GetWorldVertex(unsigned int index) const;
+  void CenterHull();
+  bool LoadShape(const char* fileName);
+  Vec2f GetWorldVertex(unsigned int index) const;
 
-		void CalculateNormals();
+  void CalculateNormals();
 
-		void RenderHull(float depth);
+  void RenderHull(float depth);
 
-		void GenerateAABB();
+  void GenerateAABB();
 
-		bool HasGeneratedAABB();
+  bool HasGeneratedAABB();
 
-		void SetWorldCenter(const Vec2f &newCenter);
-		void IncWorldCenter(const Vec2f &increment);
+  void SetWorldCenter(const Vec2f &newCenter);
+  void IncWorldCenter(const Vec2f &increment);
 
-		Vec2f GetWorldCenter() const;
+  Vec2f GetWorldCenter() const;
 
-		bool PointInsideHull(const Vec2f &point);
-	};
+  bool PointInsideHull(const Vec2f &point);
+};
 
-	float GetFloatVal(std::string strConvert);
+float GetFloatVal(std::string strConvert);
 }
 
 #endif
-

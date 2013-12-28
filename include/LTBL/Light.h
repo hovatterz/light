@@ -10,49 +10,47 @@
 
 namespace ltbl
 {
-	const float lightSubdivisionSize = static_cast<float>(M_PI) / 24.0f;
+const float lightSubdivisionSize = static_cast<float>(M_PI) / 24.0f;
 
-	class LightSystem;
+class LightSystem;
 
-	class Light :
-		public qdt::QuadTreeOccupant
-	{
-	private:
-		int numSubdivisions;
+class Light : public qdt::QuadTreeOccupant {
+ private:
+  int numSubdivisions;
 
-		sf::RenderTexture* pStaticTexture;
+  sf::RenderTexture* pStaticTexture;
 
-		bool alwaysUpdate;
+  bool alwaysUpdate;
 
-		sf::RenderWindow* pWin;
+  sf::RenderWindow* pWin;
 
-	public:
-		bool updateRequired;
+ public:
+  bool updateRequired;
 
-		float intensity;
-		float radius;
-		float size;
-		Vec2f center;
+  float intensity;
+  float radius;
+  float size;
+  Vec2f center;
 
-		float directionAngle;
-		float spreadAngle;
-		float softSpreadAngle;
+  float directionAngle;
+  float spreadAngle;
+  float softSpreadAngle;
 
-		Color3f color;
+  Color3f color;
 
-		Light();
-		~Light();
+  Light();
+  ~Light();
 
-		virtual void RenderLightSolidPortion(float depth);
-		virtual void RenderLightSoftPortion(float depth);
-		virtual void CalculateAABB();
-		qdt::AABB* GetAABB();
+  virtual void RenderLightSolidPortion(float depth);
+  virtual void RenderLightSoftPortion(float depth);
+  virtual void CalculateAABB();
+  qdt::AABB* GetAABB();
 
-		bool AlwaysUpdate();
-		void SetAlwaysUpdate(bool always);
+  bool AlwaysUpdate();
+  void SetAlwaysUpdate(bool always);
 
-		friend class LightSystem;
-	};
+  friend class LightSystem;
+};
 }
 
 #endif

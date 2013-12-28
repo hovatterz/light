@@ -18,32 +18,31 @@
 
 namespace qdt
 {
-	class QuadTree
-	{
-	private:
-		std::unordered_set<QuadTreeOccupant*> outsideRoot;
+class QuadTree {
+ private:
+  std::unordered_set<QuadTreeOccupant*> outsideRoot;
 
-		QuadTreeNode* rootNode;
+  QuadTreeNode* rootNode;
 
-	public:
-		QuadTree(const AABB &startRegion);
-		~QuadTree();
+ public:
+  QuadTree(const AABB &startRegion);
+  ~QuadTree();
 
-		void AddOccupant(QuadTreeOccupant* pOc);
-		void ClearTree(const AABB &newStartRegion);
+  void AddOccupant(QuadTreeOccupant* pOc);
+  void ClearTree(const AABB &newStartRegion);
 
-		void Query(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult);
-		void QueryToDepth(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult, int depth);
+  void Query(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult);
+  void QueryToDepth(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult, int depth);
 
-		unsigned int GetNumOccupants();
+  unsigned int GetNumOccupants();
 
-		AABB GetRootAABB();
+  AABB GetRootAABB();
 
-		void DebugRender();
+  void DebugRender();
 
-		friend class QuadTreeNode;
-		friend class QuadTreeOccupant;
-	};
+  friend class QuadTreeNode;
+  friend class QuadTreeOccupant;
+};
 }
 
 #endif
