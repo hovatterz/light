@@ -4,7 +4,7 @@ Let There Be Light is a 2D dynamic soft shadows system that uses SFML.
 [SFML Forum Thread](http://en.sfml-dev.org/forums/index.php?topic=6635.0)
 
 I am not the original author of this code. I modified it to use the CMake
-build sytem and SFML 2.0. This has only been tested on OS X 10.7 Mavericks,
+build sytem and SFML 2.X. This has only been tested on OS X 10.7 Mavericks,
 so please submit any issues you have compiling on other systems.
 
 ## Compiling
