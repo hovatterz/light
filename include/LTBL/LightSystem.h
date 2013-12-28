@@ -1,5 +1,5 @@
-#ifndef LIGHTSYSTEM_H
-#define LIGHTSYSTEM_H
+#ifndef LTBL_LIGHT_SYSTEM_H
+#define LTBL_LIGHT_SYSTEM_H
 
 #include "Light.h"
 #include "ConvexHull.h"

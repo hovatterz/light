@@ -1,5 +1,5 @@
-#ifndef QUADTREENODE_H
-#define QUADTREENODE_H
+#ifndef LTBL_QUAD_TREE_NODE_H
+#define LTBL_QUAD_TREE_NODE_H
 
 #include "QuadTreeOccupant.h"
 #include <unordered_set>

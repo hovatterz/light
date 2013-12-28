@@ -1,5 +1,5 @@
-#ifndef SFML_OPENGL_H
-#define SFML_OPENGL_H
+#ifndef LTBL_SFML_OPENGL_H
+#define LTBL_SFML_OPENGL_H
 
 #include <GL/glew.h>
 #include <SFML/Window.hpp>

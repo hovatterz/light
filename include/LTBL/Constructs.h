@@ -1,5 +1,5 @@
-#ifndef CONSTRUCTS_H
-#define CONSTRUCTS_H
+#ifndef LTBL_CONSTRUCTS_H
+#define LTBL_CONSTRUCTS_H
 
 #include <iostream>
 #include <math.h>

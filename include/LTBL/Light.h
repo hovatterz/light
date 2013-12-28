@@ -1,5 +1,5 @@
-#ifndef LIGHT_H
-#define LIGHT_H
+#ifndef LTBL_LIGHT_H
+#define LTBL_LIGHT_H
 
 #include "SFML_OpenGL.h"
 #include "Constructs.h"

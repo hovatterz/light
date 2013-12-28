@@ -8,8 +8,8 @@
  *		Eric Laukien
  */
 
-#ifndef QUADTREE_H
-#define QUADTREE_H
+#ifndef LTBL_QUAD_TREE_H
+#define LTBL_QUAD_TREE_H
 
 #include "QuadTreeNode.h"
 #include "QuadTreeOccupant.h"

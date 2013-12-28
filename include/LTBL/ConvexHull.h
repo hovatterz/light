@@ -1,5 +1,5 @@
-#ifndef CONVEX_HULL_H
-#define CONVEX_HULL_H
+#ifndef LTBL_CONVEX_HULL_H
+#define LTBL_CONVEX_HULL_H
 
 #include "SFML_OpenGL.h"
 #include "Constructs.h"

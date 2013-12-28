@@ -1,5 +1,5 @@
-#ifndef LIGHT_BEAM_H
-#define LIGHT_BEAM_H
+#ifndef LTBL_LIGHT_BEAM_H
+#define LTBL_LIGHT_BEAM_H
 
 #include "Light.h"
 

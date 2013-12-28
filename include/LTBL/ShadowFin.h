@@ -1,5 +1,5 @@
-#ifndef SHADOWFIN_H
-#define SHADOWFIN_H
+#ifndef LTBL_SHADOW_FIN_H
+#define LTBL_SHADOW_FIN_H
 
 #include "SFML_OpenGL.h"
 #include "Constructs.h"

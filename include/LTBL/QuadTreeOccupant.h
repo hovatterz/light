@@ -1,5 +1,5 @@
-#ifndef QUADTREEOCCUPANT_H
-#define QUADTREEOCCUPANT_H
+#ifndef LTBL_QUAD_TREE_OCCUPANT_H
+#define LTBL_QUAD_TREE_OCCUPANT_H
 
 #include "Constructs.h"
 
