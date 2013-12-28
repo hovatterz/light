@@ -387,7 +387,7 @@ void LightSystem::AddEmissiveLight(EmissiveLight* newEmissiveLight)
 
 void LightSystem::RemoveLight(Light* pLight)
 {
-	boost::unordered_set<Light*>::iterator it = lights.find(pLight);
+	std::unordered_set<Light*>::iterator it = lights.find(pLight);
 
 	assert(it != lights.end());
 
@@ -398,7 +398,7 @@ void LightSystem::RemoveLight(Light* pLight)
 
 void LightSystem::RemoveConvexHull(ConvexHull* pHull)
 {
-	boost::unordered_set<ConvexHull*>::iterator it = convexHulls.find(pHull);
+	std::unordered_set<ConvexHull*>::iterator it = convexHulls.find(pHull);
 
 	assert(it != convexHulls.end());
 
@@ -409,7 +409,7 @@ void LightSystem::RemoveConvexHull(ConvexHull* pHull)
 
 void LightSystem::RemoveEmissiveLight(EmissiveLight* pEmissiveLight)
 {
-	boost::unordered_set<EmissiveLight*>::iterator it = emissiveLights.find(pEmissiveLight);
+	std::unordered_set<EmissiveLight*>::iterator it = emissiveLights.find(pEmissiveLight);
 
 	assert(it != emissiveLights.end());
 
@@ -421,7 +421,7 @@ void LightSystem::RemoveEmissiveLight(EmissiveLight* pEmissiveLight)
 void LightSystem::ClearLights()
 {
 	// Delete contents
-	for(boost::unordered_set<Light*>::iterator it = lights.begin(); it != lights.end(); it++)
+	for(std::unordered_set<Light*>::iterator it = lights.begin(); it != lights.end(); it++)
 		delete *it;
 
 	lights.clear();
@@ -433,7 +433,7 @@ void LightSystem::ClearLights()
 void LightSystem::ClearConvexHulls()
 {
 	// Delete contents
-	for(boost::unordered_set<ConvexHull*>::iterator it = convexHulls.begin(); it != convexHulls.end(); it++)
+	for(std::unordered_set<ConvexHull*>::iterator it = convexHulls.begin(); it != convexHulls.end(); it++)
 		delete *it;
 
 	convexHulls.clear();
@@ -445,7 +445,7 @@ void LightSystem::ClearConvexHulls()
 void LightSystem::ClearEmissiveLights()
 {
 	// Delete contents
-	for(boost::unordered_set<EmissiveLight*>::iterator it = emissiveLights.begin(); it != emissiveLights.end(); it++)
+	for(std::unordered_set<EmissiveLight*>::iterator it = emissiveLights.begin(); it != emissiveLights.end(); it++)
 		delete *it;
 
 	emissiveLights.clear();

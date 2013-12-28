@@ -2,8 +2,8 @@
 #define QUADTREENODE_H
 
 #include "QuadTreeOccupant.h"
+#include <unordered_set>
 #include <vector>
-#include <boost/unordered_set.hpp>
 
 namespace qdt
 {
@@ -24,7 +24,7 @@ namespace qdt
 		QuadTreeNode* pParentNode;
 		QuadTree* pQuadTree;
 
-		boost::unordered_set<QuadTreeOccupant*> occupants;
+		std::unordered_set<QuadTreeOccupant*> occupants;
 
 		QuadTreeNode* children[2][2];
 		bool hasChildren;
@@ -38,7 +38,7 @@ namespace qdt
 		void DestroyChildren();
 
 		void Merge();
-		void GetOccupants(boost::unordered_set<QuadTreeOccupant*> &upperOccupants, QuadTreeNode* newNode);
+		void GetOccupants(std::unordered_set<QuadTreeOccupant*> &upperOccupants, QuadTreeNode* newNode);
 		void GetOccupants(std::vector<QuadTreeOccupant*> &queryResult);
 		Point2i GetPossibleOccupantPos(QuadTreeOccupant* pOc);
 

@@ -33,10 +33,10 @@ void QuadTreeNode::Merge()
 	}
 }
 
-void QuadTreeNode::GetOccupants(boost::unordered_set<QuadTreeOccupant*> &upperOccupants, QuadTreeNode* newNode)
+void QuadTreeNode::GetOccupants(std::unordered_set<QuadTreeOccupant*> &upperOccupants, QuadTreeNode* newNode)
 {
 	// Assign the new node pointers while adding the occupants to the upper node
-	for(boost::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
+	for(std::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
 	{
 		(*it)->pQuadTreeNode = newNode;
 		upperOccupants.insert(*it);
@@ -52,7 +52,7 @@ void QuadTreeNode::GetOccupants(boost::unordered_set<QuadTreeOccupant*> &upperOc
 void QuadTreeNode::GetOccupants(std::vector<QuadTreeOccupant*> &queryResult)
 {
 	// Assign the new node pointers while adding the occupants to the upper node
-	for(boost::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
+	for(std::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
 		queryResult.push_back(*it);
 
 	// Recusively go through children if there are any
@@ -175,7 +175,7 @@ void QuadTreeNode::Query(const AABB &queryRegion, std::vector<QuadTreeOccupant*>
 	if(region.Intersects(queryRegion))
 	{
 		// Add the occupants of this node to the array and then parse the children
-		for(boost::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
+		for(std::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
 			if((*it)->aabb.Intersects(queryRegion))
 				queryResult.push_back(*it);
 
@@ -201,7 +201,7 @@ void QuadTreeNode::QueryToDepth(const AABB &queryRegion, std::vector<QuadTreeOcc
 	if(region.Intersects(queryRegion))
 	{
 		// Add the occupants of this node to the array and then parse the children
-		for(boost::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
+		for(std::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
 			if((*it)->aabb.Intersects(queryRegion))
 				queryResult.push_back(*it);
 
@@ -224,7 +224,7 @@ void QuadTreeNode::DebugRender()
 	glColor4f(0.3f, 0.5f, 0.5f, 1.0f);
 
 	// Render the AABB's of the occupants in this node
-	for(boost::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
+	for(std::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
 		(*it)->aabb.DebugRender();
 
 	if(hasChildren)

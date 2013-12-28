@@ -41,7 +41,7 @@ void QuadTree::Query(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &qu
 {
 	// First parse the occupants outside of the root and
 	// add them to the array if the fit in the query region
-	for(boost::unordered_set<QuadTreeOccupant*>::iterator it = outsideRoot.begin(); it != outsideRoot.end(); it++)
+	for(std::unordered_set<QuadTreeOccupant*>::iterator it = outsideRoot.begin(); it != outsideRoot.end(); it++)
 		if((*it)->aabb.Intersects(queryRegion))
 			queryResult.push_back(*it);
 
@@ -53,7 +53,7 @@ void QuadTree::QueryToDepth(const AABB &queryRegion, std::vector<QuadTreeOccupan
 {
 	// First parse the occupants outside of the root and
 	// add them to the array if the fit in the query region
-	for(boost::unordered_set<QuadTreeOccupant*>::iterator it = outsideRoot.begin(); it != outsideRoot.end(); it++)
+	for(std::unordered_set<QuadTreeOccupant*>::iterator it = outsideRoot.begin(); it != outsideRoot.end(); it++)
 		if((*it)->aabb.Intersects(queryRegion))
 			queryResult.push_back(*it);
 
@@ -76,7 +76,7 @@ void QuadTree::DebugRender()
 	glColor4f(0.1f, 0.6f, 0.4f, 1.0f);
 
 	// Parse all AABB's in the tree and render them
-	for(boost::unordered_set<QuadTreeOccupant*>::iterator it = outsideRoot.begin(); it != outsideRoot.end(); it++)
+	for(std::unordered_set<QuadTreeOccupant*>::iterator it = outsideRoot.begin(); it != outsideRoot.end(); it++)
 		(*it)->aabb.DebugRender();
 
 	// Render the tree itself

@@ -5,7 +5,7 @@
 #include "ConvexHull.h"
 #include "ShadowFin.h"
 #include "SFML_OpenGL.h"
-#include <boost/unordered_set.hpp>
+#include <unordered_set>
 #include <vector>
 #include <memory>
 
@@ -49,11 +49,11 @@ namespace ltbl
 	private:
 		sf::RenderWindow* pWin;
 
-		boost::unordered_set<Light*> lights;
+		std::unordered_set<Light*> lights;
 	
-		boost::unordered_set<EmissiveLight*> emissiveLights;
+		std::unordered_set<EmissiveLight*> emissiveLights;
 
-		boost::unordered_set<ConvexHull*> convexHulls;
+		std::unordered_set<ConvexHull*> convexHulls;
 
 		std::vector<Light*> lightsToPreBuild;
 

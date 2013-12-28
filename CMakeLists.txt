@@ -4,10 +4,6 @@ project(light)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/cmake_modules" ${CMAKE_MODULE_PATH})
 
-# Find Boost
-find_package(Boost REQUIRED)
-include_directories(${Boost_INCLUDE_DIR})
-
 # Find OpenGL
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})

@@ -14,14 +14,14 @@
 #include "QuadTreeNode.h"
 #include "QuadTreeOccupant.h"
 
-#include <boost/unordered_set.hpp>
+#include <unordered_set>
 
 namespace qdt
 {
 	class QuadTree
 	{
 	private:
-		boost::unordered_set<QuadTreeOccupant*> outsideRoot;
+		std::unordered_set<QuadTreeOccupant*> outsideRoot;
 
 		QuadTreeNode* rootNode;
 
