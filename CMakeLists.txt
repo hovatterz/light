@@ -21,7 +21,7 @@ set(light_SRC
     src/ConvexHull.cpp
     src/Light.cpp
     src/LightSystem.cpp
-    src/Light_Beam.cpp
+    src/LightBeam.cpp
     src/QuadTree.cpp
     src/QuadTreeNode.cpp
     src/QuadTreeOccupant.cpp

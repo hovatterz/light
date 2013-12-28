@@ -5,14 +5,14 @@
 
 namespace ltbl
 {
-class Light_Beam : public Light {
+class LightBeam : public Light {
  private:
   Vec2f innerPoint1, innerPoint2, outerPoint1, outerPoint2;
  public:
   float width;
 
-  Light_Beam();
-  ~Light_Beam();
+  LightBeam();
+  ~LightBeam();
 
   void setCenter(const Vec2f &newCenter);
   void updateDirectionAngle();

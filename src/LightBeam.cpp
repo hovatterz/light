@@ -1,4 +1,4 @@
-#include "LTBL/Light_Beam.h"
+#include "LTBL/LightBeam.h"
 
 #include "LTBL/ShadowFin.h"
 
@@ -7,15 +7,15 @@
 using namespace ltbl;
 using namespace qdt;
 
-Light_Beam::Light_Beam() : width(64.0f)
+LightBeam::LightBeam() : width(64.0f)
 {
 }
 
-Light_Beam::~Light_Beam()
+LightBeam::~LightBeam()
 {
 }
 
-void Light_Beam::setCenter(const Vec2f &newCenter)
+void LightBeam::setCenter(const Vec2f &newCenter)
 {
   Vec2f diff(newCenter - center);
   center = newCenter;
@@ -27,7 +27,7 @@ void Light_Beam::setCenter(const Vec2f &newCenter)
   outerPoint2 += diff;
 }
 
-void Light_Beam::updateDirectionAngle()
+void LightBeam::updateDirectionAngle()
 {
   // Recalculate positions of points
   Vec2f innerComponents(cosf(directionAngle), sinf(directionAngle));
@@ -45,7 +45,7 @@ void Light_Beam::updateDirectionAngle()
   outerPoint2.y = innerPoint1.y + outerComponents2.y * radius;
 }
 
-void Light_Beam::renderLightSolidPortion(float depth)
+void LightBeam::renderLightSolidPortion(float depth)
 {
   assert(intensity > 0.0f && intensity <= 1.0f);
 
@@ -68,7 +68,7 @@ void Light_Beam::renderLightSolidPortion(float depth)
   glEnd();
 }
 
-void Light_Beam::renderLightSoftPortion(float depth)
+void LightBeam::renderLightSoftPortion(float depth)
 {
   // If light goes all the way around do not render fins
   if(spreadAngle == 2.0f * M_PI || softSpreadAngle == 0.0f)
@@ -94,7 +94,7 @@ void Light_Beam::renderLightSoftPortion(float depth)
   fin2.render(depth);
 }
 
-void Light_Beam::calculateAABB()
+void LightBeam::calculateAABB()
 {
   aabb.lowerBound = innerPoint1;
   aabb.upperBound = innerPoint1;
