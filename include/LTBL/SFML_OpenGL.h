@@ -9,7 +9,7 @@
 
 namespace ltbl
 {
-extern bool glewInitialized;
+extern bool GlewInitialized;
 void InitGlew();
 void DrawQuad(sf::Texture &Texture);
 }

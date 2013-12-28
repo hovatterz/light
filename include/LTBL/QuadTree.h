@@ -28,17 +28,17 @@ class QuadTree {
   QuadTree(const AABB &startRegion);
   ~QuadTree();
 
-  void AddOccupant(QuadTreeOccupant* pOc);
-  void ClearTree(const AABB &newStartRegion);
+  void addOccupant(QuadTreeOccupant* pOc);
+  void clearTree(const AABB &newStartRegion);
 
-  void Query(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult);
-  void QueryToDepth(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult, int depth);
+  void query(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult);
+  void queryToDepth(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult, int depth);
 
-  unsigned int GetNumOccupants();
+  unsigned int getNumOccupants();
 
-  AABB GetRootAABB();
+  AABB getRootAABB();
 
-  void DebugRender();
+  void debugRender();
 
   friend class QuadTreeNode;
   friend class QuadTreeOccupant;

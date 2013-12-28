@@ -22,43 +22,43 @@ AABB::AABB(const Vec2f &bottomLeft, const Vec2f &topRight)
 {
 }
 
-Vec2f AABB::GetCenter() const
+Vec2f AABB::getCenter() const
 {
   return (lowerBound + upperBound) / 2.0f;
 }
 
-Vec2f AABB::GetDims() const
+Vec2f AABB::getDims() const
 {
   return upperBound - lowerBound;
 }
 
-Vec2f AABB::GetLowerBound() const
+Vec2f AABB::getLowerBound() const
 {
   return lowerBound;
 }
 
-Vec2f AABB::GetUpperBound() const
+Vec2f AABB::getUpperBound() const
 {
   return upperBound;
 }
 
-void AABB::SetCenter(const Vec2f &newCenter)
+void AABB::setCenter(const Vec2f &newCenter)
 {
-  Vec2f difference = newCenter - GetCenter();
+  Vec2f difference = newCenter - getCenter();
 
   upperBound += difference;
   lowerBound += difference;
 }
 
-void AABB::IncCenter(const Vec2f &increment)
+void AABB::incCenter(const Vec2f &increment)
 {
   upperBound += increment;
   lowerBound += increment;
 }
 
-void AABB::SetDims(const Vec2f &newDims)
+void AABB::setDims(const Vec2f &newDims)
 {
-  Vec2f center = GetCenter();
+  Vec2f center = getCenter();
 
   Vec2f halfDims = newDims / 2.0f;
 
@@ -66,7 +66,7 @@ void AABB::SetDims(const Vec2f &newDims)
   upperBound = center + halfDims;
 }
 
-bool AABB::Intersects(const AABB &other) const
+bool AABB::intersects(const AABB &other) const
 {
   if(upperBound.x < other.lowerBound.x)
     return false;
@@ -83,7 +83,7 @@ bool AABB::Intersects(const AABB &other) const
   return true;
 }
 
-bool AABB::Contains(const AABB &other) const
+bool AABB::contains(const AABB &other) const
 {
   if(other.lowerBound.x >= lowerBound.x &&
      other.upperBound.x <= upperBound.x &&
@@ -94,7 +94,7 @@ bool AABB::Contains(const AABB &other) const
   return false;
 }
 
-void AABB::DebugRender()
+void AABB::debugRender()
 {
   // Render the AABB with lines
   glBegin(GL_LINES);
@@ -127,18 +127,18 @@ QuadTreeOccupant::~QuadTreeOccupant()
 {
 }
 
-void QuadTreeOccupant::UpdateTreeStatus()
+void QuadTreeOccupant::updateTreeStatus()
 {
   if(pQuadTreeNode == NULL)
   {
     // Not in the tree, so see if it fits in the root partition now that the AABB has been changed.
     if(pQuadTree != NULL) // It must not have been added to a tree if this is NULL as well
-      if(pQuadTree->rootNode->region.Contains(aabb))
+      if(pQuadTree->rootNode->region.contains(aabb))
       {
         // Fits, remove it from the outside root set and add it to the root
         pQuadTree->outsideRoot.erase(this);
 
-        pQuadTree->rootNode->AddOccupant(this);
+        pQuadTree->rootNode->addOccupant(this);
       }
   }
   else
@@ -150,14 +150,14 @@ void QuadTreeOccupant::UpdateTreeStatus()
     pQuadTreeNode->occupants.erase(this);
 
     // See of the occupant still fits
-    if(pQuadTreeNode->region.Contains(aabb))
+    if(pQuadTreeNode->region.contains(aabb))
     {
       // Re-add to possibly settle into a new position lower in the tree
 
       // AddOccupant will raise this number to indicate more occupants than there actually are
       pQuadTreeNode->numOccupants--;
 
-      pQuadTreeNode->AddOccupant(this);
+      pQuadTreeNode->addOccupant(this);
     }
     else
     {
@@ -168,18 +168,18 @@ void QuadTreeOccupant::UpdateTreeStatus()
       // Check to see if this partition should be destroyed.
       // Then, go through the parents until enough occupants are present and
       // merge everything into that parent
-      if(pQuadTreeNode->numOccupants - 1 < minimumOccupants)
+      if(pQuadTreeNode->numOccupants - 1 < MinimumOccupants)
       {
         // Move up pNode until we have a partition above the minimum count
         while(pQuadTreeNode->pParentNode != NULL)
         {
-          if(pQuadTreeNode->numOccupants - 1 >= minimumOccupants)
+          if(pQuadTreeNode->numOccupants - 1 >= MinimumOccupants)
             break;
 
           pQuadTreeNode = pQuadTreeNode->pParentNode;
         }
 
-        pQuadTreeNode->Merge();
+        pQuadTreeNode->merge();
       }
 
       // Now, go up and decrement the occupant counts and search for a new place for the modified occupant
@@ -188,10 +188,10 @@ void QuadTreeOccupant::UpdateTreeStatus()
         pQuadTreeNode->numOccupants--;
 
         // See if this node contains the occupant. If so, add it to that occupant.
-        if(pQuadTreeNode->region.Contains(aabb))
+        if(pQuadTreeNode->region.contains(aabb))
         {
           // Add the occupant to this node and break
-          pQuadTreeNode->AddOccupant(this);
+          pQuadTreeNode->addOccupant(this);
 
           return;
         }
@@ -212,7 +212,7 @@ void QuadTreeOccupant::UpdateTreeStatus()
   }
 }
 
-void QuadTreeOccupant::RemoveFromTree()
+void QuadTreeOccupant::removeFromTree()
 {
   if(pQuadTreeNode != NULL) // If part of a quad tree
   {
@@ -225,18 +225,18 @@ void QuadTreeOccupant::RemoveFromTree()
     // Check to see if this partition should be destroyed.
     // Then, go through the parents until enough occupants are present and
     // merge everything into that parent
-    if(pQuadTreeNode->numOccupants - 1 < minimumOccupants)
+    if(pQuadTreeNode->numOccupants - 1 < MinimumOccupants)
     {
       // Move up pNode until we have a partition above the minimum count
       while(pQuadTreeNode->pParentNode != NULL)
       {
-        if(pQuadTreeNode->numOccupants - 1 >= minimumOccupants)
+        if(pQuadTreeNode->numOccupants - 1 >= MinimumOccupants)
           break;
 
         pQuadTreeNode = pQuadTreeNode->pParentNode;
       }
 
-      pQuadTreeNode->Merge();
+      pQuadTreeNode->merge();
     }
 
     // Decrement the remaining occupant counts

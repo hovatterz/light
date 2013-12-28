@@ -15,7 +15,7 @@ class ShadowFin {
   ShadowFin();
   ~ShadowFin();
 
-  void Render(float depth);
+  void render(float depth);
 };
 }
 

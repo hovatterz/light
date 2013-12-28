@@ -25,73 +25,66 @@ unsigned int GetFrameRate(const sf::Uint32 time)
 
 int main(int argc, char* args[])
 {
-	sf::VideoMode vidMode;
-	vidMode.width = 800;
-	vidMode.height = 600;
-	vidMode.bitsPerPixel = 32;
-	assert(vidMode.isValid());
+  sf::VideoMode vidMode;
+  vidMode.width = 800;
+  vidMode.height = 600;
+  vidMode.bitsPerPixel = 32;
+  assert(vidMode.isValid());
 
-	sf::RenderWindow win;
-	win.create(vidMode, "Let there be Light - Demo");
+  sf::RenderWindow win;
+  win.create(vidMode, "Let there be Light - Demo");
 
-	// ---------------------- Background Image ---------------------
+  // ---------------------- Background Image ---------------------
 
-	sf::Texture backgroundImage;
+  sf::Texture backgroundImage;
 
-	assert(backgroundImage.loadFromFile("data/background.png"));
+  assert(backgroundImage.loadFromFile("data/background.png"));
 
-	// Tiling background
-	backgroundImage.setRepeated(true);
+  // Tiling background
+  backgroundImage.setRepeated(true);
 
-	sf::Sprite backgroundSprite(backgroundImage);
-	backgroundSprite.setTextureRect(sf::IntRect(0, 0, vidMode.width, vidMode.height));
+  sf::Sprite backgroundSprite(backgroundImage);
+  backgroundSprite.setTextureRect(sf::IntRect(0, 0, vidMode.width, vidMode.height));
 
   sf::RectangleShape testShape(sf::Vector2f(10, 10));
   testShape.setPosition(30, 30);
 
-	// --------------------- Light System Setup ---------------------
+  // --------------------- Light System Setup ---------------------
 
-	ltbl::LightSystem ls(qdt::AABB(Vec2f(0.0f, 0.0f), Vec2f(static_cast<float>(vidMode.width), static_cast<float>(vidMode.height))), &win);
+  ltbl::LightSystem ls(qdt::AABB(Vec2f(0.0f, 0.0f), Vec2f(static_cast<float>(vidMode.width), static_cast<float>(vidMode.height))), &win);
 
-	// Create a light
-	ltbl::Light* testLight = new ltbl::Light();
-	testLight->center = Vec2f(200.0f, 200.0f);
-	testLight->radius = 500.0f;
-	testLight->size = 30.0f;
-	testLight->softSpreadAngle = 0.0f;
-	testLight->CalculateAABB();
+  // Create a light
+  ltbl::Light* testLight = new ltbl::Light();
+  testLight->center = Vec2f(200.0f, 200.0f);
+  testLight->radius = 500.0f;
+  testLight->size = 30.0f;
+  testLight->softSpreadAngle = 0.0f;
+  testLight->calculateAABB();
+  ls.addLight(testLight);
 
-	ls.AddLight(testLight);
+  // Create a hull by loading it from a file
+  ltbl::ConvexHull* testHull = new ltbl::ConvexHull();
+  if(!testHull->loadShape("data/testShape.txt"))
+    abort();
 
-	// Create a hull by loading it from a file
-	ltbl::ConvexHull* testHull = new ltbl::ConvexHull();
+  // Pre-calculate certain aspects
+  testHull->calculateNormals();
+  testHull->generateAABB();
+  testHull->setWorldCenter(Vec2f(100.0f, 100.0f));
+  ls.addConvexHull(testHull);
 
-	if(!testHull->LoadShape("data/testShape.txt"))
-		abort();
+  // Create a hull by loading it from a file
+  ltbl::ConvexHull* testHull2 = new ltbl::ConvexHull();
+  if(!testHull2->loadShape("data/testShape.txt"))
+    abort();
 
-	// Pre-calculate certain aspects
-	testHull->CalculateNormals();
-	testHull->GenerateAABB();
+  // Pre-calculate certain aspects
+  testHull2->calculateNormals();
+  testHull2->generateAABB();
+  testHull2->setWorldCenter(Vec2f(300.0f, 300.0f));
+  ls.addConvexHull(testHull2);
 
-	testHull->SetWorldCenter(Vec2f(100.0f, 100.0f));
-
-	ls.AddConvexHull(testHull);
-
-	// Create a hull by loading it from a file
-	ltbl::ConvexHull* testHull2 = new ltbl::ConvexHull();
-
-	if(!testHull2->LoadShape("data/testShape.txt"))
-		abort();
-
-	// Pre-calculate certain aspects
-	testHull2->CalculateNormals();
-	testHull2->GenerateAABB();
-
-	testHull2->SetWorldCenter(Vec2f(300.0f, 300.0f));
-
-	ls.AddConvexHull(testHull2);
-
-	// ------------------------- Game Loop --------------------------
+  // ------------------------- Game Loop --------------------------
 
   sf::Font font;
   if (!font.loadFromFile("data/sansation.ttf"))
@@ -101,41 +94,43 @@ int main(int argc, char* args[])
   fpsText.setPosition(10, 10);
 
   sf::Clock clock;
-	sf::Event eventStructure;
+  sf::Event eventStructure;
 
-	bool quit = false;
-	while(!quit)
-	{
-		while(win.pollEvent(eventStructure))
-			if(eventStructure.type == sf::Event::Closed)
-			{
-				quit = true;
-				break;
-			}
+  bool quit = false;
+  while(!quit)
+  {
+    while(win.pollEvent(eventStructure))
+      if(eventStructure.type == sf::Event::Closed)
+      {
+        quit = true;
+        break;
+      }
 
-		sf::Vector2i mousePos = sf::Mouse::getPosition(win);
+    sf::Vector2i mousePos = sf::Mouse::getPosition(win);
 
-		// Update light
-		testLight->center.x = static_cast<float>(mousePos.x);
-		testLight->center.y = static_cast<float>(vidMode.height - mousePos.y);
-		testLight->UpdateTreeStatus();
+    // Update light
+    testLight->center.x = static_cast<float>(mousePos.x);
+    testLight->center.y = static_cast<float>(vidMode.height - mousePos.y);
+    testLight->updateTreeStatus();
 
-		win.clear();
+    testShape.setPosition(mousePos.x, mousePos.y);
 
-		// Draw the background
-		win.draw(backgroundSprite);
+    win.clear();
+
+    // Draw the background
+    win.draw(backgroundSprite);
 
     win.draw(testShape);
 
-		// Calculate the lights
-		ls.RenderLights();
+    // Calculate the lights
+    ls.renderLights();
 
-		// Draw the lights
-		ls.RenderLightTexture(0.0f);
+    // Draw the lights
+    ls.renderLightTexture(0.0f);
 
     win.draw(fpsText);
 
-		win.display();
+    win.display();
 
     const sf::Uint32 elapsedTime = clock.restart().asMilliseconds();
     unsigned int fps = GetFrameRate(elapsedTime);
@@ -143,7 +138,7 @@ int main(int argc, char* args[])
     char buffer[64];
     snprintf(buffer, sizeof(buffer), "%d FPS", fps);
     fpsText.setString(buffer);
-	}
+  }
 
-	win.close();
+  win.close();
 }

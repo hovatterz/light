@@ -10,30 +10,30 @@ QuadTreeNode::QuadTreeNode(const AABB &newRegion, unsigned int numLevels, QuadTr
 : region(newRegion), hasChildren(false), numOccupants(0),
     pParentNode(pParent), pQuadTree(pContainer), level(numLevels)
 {
-  center = region.GetCenter();
+  center = region.getCenter();
 }
 
 QuadTreeNode::~QuadTreeNode()
 {
   if(hasChildren)
-    DestroyChildren();
+    destroyChildren();
 }
 
-void QuadTreeNode::Merge()
+void QuadTreeNode::merge()
 {
   // Merge all children into this node
   if(hasChildren)
   {
     for(unsigned int x = 0; x < 2; x++)
       for(unsigned int y = 0; y < 2; y++)
-        children[x][y]->GetOccupants(occupants, this);
+        children[x][y]->getOccupants(occupants, this);
 
-    DestroyChildren();
+    destroyChildren();
     hasChildren = false;
   }
 }
 
-void QuadTreeNode::GetOccupants(std::unordered_set<QuadTreeOccupant*> &upperOccupants, QuadTreeNode* newNode)
+void QuadTreeNode::getOccupants(std::unordered_set<QuadTreeOccupant*> &upperOccupants, QuadTreeNode* newNode)
 {
   // Assign the new node pointers while adding the occupants to the upper node
   for(std::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
@@ -46,10 +46,10 @@ void QuadTreeNode::GetOccupants(std::unordered_set<QuadTreeOccupant*> &upperOccu
   if(hasChildren)
     for(unsigned int x = 0; x < 2; x++)
       for(unsigned int y = 0; y < 2; y++)
-        children[x][y]->GetOccupants(upperOccupants, newNode);
+        children[x][y]->getOccupants(upperOccupants, newNode);
 }
 
-void QuadTreeNode::GetOccupants(std::vector<QuadTreeOccupant*> &queryResult)
+void QuadTreeNode::getOccupants(std::vector<QuadTreeOccupant*> &queryResult)
 {
   // Assign the new node pointers while adding the occupants to the upper node
   for(std::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
@@ -59,13 +59,13 @@ void QuadTreeNode::GetOccupants(std::vector<QuadTreeOccupant*> &queryResult)
   if(hasChildren)
     for(unsigned int x = 0; x < 2; x++)
       for(unsigned int y = 0; y < 2; y++)
-        children[x][y]->GetOccupants(queryResult);
+        children[x][y]->getOccupants(queryResult);
 }
 
-void QuadTreeNode::Partition()
+void QuadTreeNode::partition()
 {
   // Create the children nodes with the appropriate bounds set
-  Vec2f halfWidth = region.GetDims() / 2.0f;
+  Vec2f halfWidth = region.getDims() / 2.0f;
 
   const unsigned int nextLevel = level + 1;
 
@@ -76,20 +76,20 @@ void QuadTreeNode::Partition()
                                              Vec2f(center.x + x * halfWidth.x, center.y + y * halfWidth.y)), nextLevel, this, pQuadTree);
 
       // Oversize
-      children[x][y]->region.SetDims(children[x][y]->region.GetDims() * oversizedMultiplier);
+      children[x][y]->region.setDims(children[x][y]->region.getDims() * OversizedMultiplier);
     }
 
   hasChildren = true;
 }
 
-void QuadTreeNode::DestroyChildren()
+void QuadTreeNode::destroyChildren()
 {
   for(unsigned int x = 0; x < 2; x++)
     for(unsigned int y = 0; y < 2; y++)
       delete children[x][y];
 }
 
-Point2i QuadTreeNode::GetPossibleOccupantPos(QuadTreeOccupant* pOc)
+Point2i QuadTreeNode::getPossibleOccupantPos(QuadTreeOccupant* pOc)
 {
   Point2i pos;
 
@@ -110,7 +110,7 @@ Point2i QuadTreeNode::GetPossibleOccupantPos(QuadTreeOccupant* pOc)
   return pos;
 }
 
-void QuadTreeNode::AddOccupant(QuadTreeOccupant* pOc)
+void QuadTreeNode::addOccupant(QuadTreeOccupant* pOc)
 {
   numOccupants++;
 
@@ -119,13 +119,13 @@ void QuadTreeNode::AddOccupant(QuadTreeOccupant* pOc)
   if(hasChildren)
   {
     // Add the occupant to a child which contains it
-    Point2i pos = GetPossibleOccupantPos(pOc);
+    Point2i pos = getPossibleOccupantPos(pOc);
 
-    if(children[pos.x][pos.y]->region.Contains(pOc->aabb))
+    if(children[pos.x][pos.y]->region.contains(pOc->aabb))
     {
       // Fits into this child node, to continue
       // the adding process from there
-      children[pos.x][pos.y]->AddOccupant(pOc);
+      children[pos.x][pos.y]->addOccupant(pOc);
 
       return;
     }
@@ -133,7 +133,7 @@ void QuadTreeNode::AddOccupant(QuadTreeOccupant* pOc)
   else
   {
     // See if there is enough room still left in this node
-    if(occupants.size() + 1 <= maximumOccupants || level > maxLevels)
+    if(occupants.size() + 1 <= MaximumOccupants || level > MaxLevels)
     {
       // Add to this node's set
       occupants.insert(pOc);
@@ -145,16 +145,16 @@ void QuadTreeNode::AddOccupant(QuadTreeOccupant* pOc)
     else
     {
       // Doesn't fit here, so create a new partition
-      Partition();
+      partition();
 
       // Add the occupant to a child which contains it
-      Point2i pos = GetPossibleOccupantPos(pOc);
+      Point2i pos = getPossibleOccupantPos(pOc);
 
-      if(children[pos.x][pos.y]->region.Contains(pOc->aabb))
+      if(children[pos.x][pos.y]->region.contains(pOc->aabb))
       {
         // Fits into this child node, to continue
         // the adding process from there
-        children[pos.x][pos.y]->AddOccupant(pOc);
+        children[pos.x][pos.y]->addOccupant(pOc);
 
         return;
       }
@@ -169,69 +169,69 @@ void QuadTreeNode::AddOccupant(QuadTreeOccupant* pOc)
   pOc->pQuadTree = pQuadTree;
 }
 
-void QuadTreeNode::Query(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult)
+void QuadTreeNode::query(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult)
 {
   // See if this region is visible
-  if(region.Intersects(queryRegion))
+  if(region.intersects(queryRegion))
   {
     // Add the occupants of this node to the array and then parse the children
     for(std::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
-      if((*it)->aabb.Intersects(queryRegion))
+      if((*it)->aabb.intersects(queryRegion))
         queryResult.push_back(*it);
 
     if(hasChildren)
     {
       for(unsigned int x = 0; x < 2; x++)
         for(unsigned int y = 0; y < 2; y++)
-          children[x][y]->Query(queryRegion, queryResult);
+          children[x][y]->query(queryRegion, queryResult);
     }
   }
 }
 
-void QuadTreeNode::QueryToDepth(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult, int depth)
+void QuadTreeNode::queryToDepth(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult, int depth)
 {
   if(depth == 0)
   {
-    GetOccupants(queryResult);
+    getOccupants(queryResult);
 
     return;
   }
 
   // See if this region is visible
-  if(region.Intersects(queryRegion))
+  if(region.intersects(queryRegion))
   {
     // Add the occupants of this node to the array and then parse the children
     for(std::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
-      if((*it)->aabb.Intersects(queryRegion))
+      if((*it)->aabb.intersects(queryRegion))
         queryResult.push_back(*it);
 
     if(hasChildren)
     {
       for(unsigned int x = 0; x < 2; x++)
         for(unsigned int y = 0; y < 2; y++)
-          children[x][y]->QueryToDepth(queryRegion, queryResult, depth - 1);
+          children[x][y]->queryToDepth(queryRegion, queryResult, depth - 1);
     }
   }
 }
 
-void QuadTreeNode::DebugRender()
+void QuadTreeNode::debugRender()
 {
   // Render the region AABB
   glColor4f(0.7f, 0.1f, 0.5f, 1.0f);
 
-  region.DebugRender();
+  region.debugRender();
 
   glColor4f(0.3f, 0.5f, 0.5f, 1.0f);
 
   // Render the AABB's of the occupants in this node
   for(std::unordered_set<QuadTreeOccupant*>::iterator it = occupants.begin(); it != occupants.end(); it++)
-    (*it)->aabb.DebugRender();
+    (*it)->aabb.debugRender();
 
   if(hasChildren)
   {
     // Recursively render all of the AABB's below this node
     for(unsigned int x = 0; x < 2; x++)
       for(unsigned int y = 0; y < 2; y++)
-        children[x][y]->DebugRender();
+        children[x][y]->debugRender();
   }
 }

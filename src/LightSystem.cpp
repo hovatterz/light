@@ -13,7 +13,7 @@ EmissiveLight::EmissiveLight() : scale(1.0f, 1.0f)
 {
 }
 
-void EmissiveLight::SetTexture(sf::Texture* texture)
+void EmissiveLight::setTexture(sf::Texture* texture)
 {
   text = texture;
 
@@ -26,10 +26,10 @@ void EmissiveLight::SetTexture(sf::Texture* texture)
   aabb.upperBound.x = center.x + halfWidth;
   aabb.upperBound.y = center.y + halfHeight;
 
-  UpdateTreeStatus();
+  updateTreeStatus();
 }
 
-void EmissiveLight::Render()
+void EmissiveLight::render()
 {
   glPushMatrix();
 
@@ -41,7 +41,7 @@ void EmissiveLight::Render()
   glPopMatrix();
 }
 
-void EmissiveLight::SetCenter(const Vec2f &newCenter)
+void EmissiveLight::setCenter(const Vec2f &newCenter)
 {
   Vec2f difference = newCenter - center;
 
@@ -51,32 +51,32 @@ void EmissiveLight::SetCenter(const Vec2f &newCenter)
   aabb.upperBound += difference;
 }
 
-void EmissiveLight::IncCenter(const Vec2f &increment)
+void EmissiveLight::incCenter(const Vec2f &increment)
 {
   center += increment;
   aabb.lowerBound += increment;
   aabb.upperBound += increment;
 }
 
-void EmissiveLight::SetScale(const Vec2f &newScale)
+void EmissiveLight::setScale(const Vec2f &newScale)
 {
   scale = newScale;
-  aabb.SetDims(Vec2f(text->getSize().x / 2.0f * scale.x, text->getSize().y / 2.0f * scale.y));
+  aabb.setDims(Vec2f(text->getSize().x / 2.0f * scale.x, text->getSize().y / 2.0f * scale.y));
 }
 
-Vec2f EmissiveLight::GetScale()
+Vec2f EmissiveLight::getScale()
 {
   return scale;
 }
 
-Vec2f EmissiveLight::GetCenter()
+Vec2f EmissiveLight::getCenter()
 {
   return center;
 }
 
-void EmissiveLight::Update()
+void EmissiveLight::update()
 {
-  UpdateTreeStatus();
+  updateTreeStatus();
 }
 
 LightSystem::LightSystem(const AABB &region, sf::RenderWindow* pRenderWindow)
@@ -90,31 +90,31 @@ LightSystem::LightSystem(const AABB &region, sf::RenderWindow* pRenderWindow)
   if(!softShadowTexture.loadFromFile("data/softShadowsTexture.png"))
     abort(); // Could not find the texture, abort
 
-  SetUp(region);
+  setUp(region);
 }
 
 LightSystem::~LightSystem()
 {
   // Destroy resources
-  ClearLights();
-  ClearConvexHulls();
-  ClearEmissiveLights();
+  clearLights();
+  clearConvexHulls();
+  clearEmissiveLights();
 }
 
-void LightSystem::CameraSetup()
+void LightSystem::cameraSetup()
 {
   sf::Vector2f viewCenter = view.getCenter();
   glTranslatef(-viewCenter.x, -viewCenter.y, 0.0f);
 }
 
-void LightSystem::MaskShadow(Light* light, ConvexHull* convexHull, float depth)
+void LightSystem::maskShadow(Light* light, ConvexHull* convexHull, float depth)
 {
   // ----------------------------- Determine the Shadow Boundaries -----------------------------
 
   Vec2f lCenter = light->center;
   float lRadius = light->radius;
 
-  Vec2f hCenter = convexHull->GetWorldCenter();
+  Vec2f hCenter = convexHull->getWorldCenter();
 
   const int numVertices = convexHull->vertices.size();
 
@@ -122,9 +122,9 @@ void LightSystem::MaskShadow(Light* light, ConvexHull* convexHull, float depth)
 
   for(int i = 0; i < numVertices; i++)
   {
-    Vec2f firstVertex(convexHull->GetWorldVertex(i));
+    Vec2f firstVertex(convexHull->getWorldVertex(i));
     int secondIndex = (i + 1) % numVertices;
-    Vec2f secondVertex(convexHull->GetWorldVertex(secondIndex));
+    Vec2f secondVertex(convexHull->getWorldVertex(secondIndex));
     Vec2f middle = (firstVertex + secondVertex) / 2.0f;
 
     // Use normal to take light width into account, this eliminates popping
@@ -161,7 +161,7 @@ void LightSystem::MaskShadow(Light* light, ConvexHull* convexHull, float depth)
 
   // -------------------------------- Shadow Fins --------------------------------
 
-  Vec2f firstBoundryPoint = convexHull->GetWorldVertex(firstBoundryIndex);
+  Vec2f firstBoundryPoint = convexHull->getWorldVertex(firstBoundryIndex);
 
   Vec2f lightNormal(-(lCenter.y - firstBoundryPoint.y), lCenter.x - firstBoundryPoint.x);
 
@@ -183,7 +183,7 @@ void LightSystem::MaskShadow(Light* light, ConvexHull* convexHull, float depth)
 
   ShadowFin secondFin;
 
-  Vec2f secondBoundryPoint = convexHull->GetWorldVertex(secondBoundryIndex);
+  Vec2f secondBoundryPoint = convexHull->getWorldVertex(secondBoundryIndex);
 
   lightNormal = Vec2f(-(lCenter.y - secondBoundryPoint.y), lCenter.x - secondBoundryPoint.x);
   centerToBoundry = secondBoundryPoint - hCenter;
@@ -209,13 +209,13 @@ void LightSystem::MaskShadow(Light* light, ConvexHull* convexHull, float depth)
   Vec2f mainUmbraVec1 = firstFin.umbra;
   Vec2f mainUmbraVec2 = secondFin.umbra;
 
-  AddExtraFins(*convexHull, &firstFin, *light, mainUmbraVec1, mainUmbraRoot1, firstBoundryIndex, false);
-  AddExtraFins(*convexHull, &secondFin, *light, mainUmbraVec2, mainUmbraRoot2, secondBoundryIndex, true);
+  addExtraFins(*convexHull, &firstFin, *light, mainUmbraVec1, mainUmbraRoot1, firstBoundryIndex, false);
+  addExtraFins(*convexHull, &secondFin, *light, mainUmbraVec2, mainUmbraRoot2, secondBoundryIndex, true);
 
   // ----------------------------- Drawing the umbra -----------------------------
 
-  Vec2f vertex1 = convexHull->GetWorldVertex(firstBoundryIndex);
-  Vec2f vertex2 = convexHull->GetWorldVertex(secondBoundryIndex);
+  Vec2f vertex1 = convexHull->getWorldVertex(firstBoundryIndex);
+  Vec2f vertex2 = convexHull->getWorldVertex(secondBoundryIndex);
 
   Vec2f throughCenter = (hCenter - lCenter).normalize() * lRadius;
 
@@ -232,9 +232,9 @@ void LightSystem::MaskShadow(Light* light, ConvexHull* convexHull, float depth)
   glEnd();
 }
 
-void LightSystem::AddExtraFins(const ConvexHull &hull, ShadowFin* fin, const Light &light, Vec2f &mainUmbra, Vec2f &mainUmbraRoot, int boundryIndex, bool wrapCW)
+void LightSystem::addExtraFins(const ConvexHull &hull, ShadowFin* fin, const Light &light, Vec2f &mainUmbra, Vec2f &mainUmbraRoot, int boundryIndex, bool wrapCW)
 {
-  Vec2f hCenter = hull.GetWorldCenter();
+  Vec2f hCenter = hull.getWorldCenter();
 
   int secondEdgeIndex;
   int numVertices = static_cast<signed>(hull.vertices.size());
@@ -260,7 +260,7 @@ void LightSystem::AddExtraFins(const ConvexHull &hull, ShadowFin* fin, const Lig
     fin->umbra = edgeVec * light.radius;
 
     // Add the extra fin
-    Vec2f secondBoundryPoint = hull.GetWorldVertex(secondEdgeIndex);
+    Vec2f secondBoundryPoint = hull.getWorldVertex(secondEdgeIndex);
 
     Vec2f lightNormal(-(light.center.y - secondBoundryPoint.y), light.center.x - secondBoundryPoint.x);
 
@@ -292,7 +292,7 @@ void LightSystem::AddExtraFins(const ConvexHull &hull, ShadowFin* fin, const Lig
   mainUmbra = fin->umbra;
 }
 
-void LightSystem::SetUp(const AABB &region)
+void LightSystem::setUp(const AABB &region)
 {
   // Create the quad trees
   lightTree.reset(new QuadTree(region));
@@ -365,59 +365,59 @@ void LightSystem::SetUp(const AABB &region)
   pWin->setActive();
 }
 
-void LightSystem::AddLight(Light* newLight)
+void LightSystem::addLight(Light* newLight)
 {
   newLight->pWin = pWin;
   lights.insert(newLight);
-  lightTree->AddOccupant(newLight);
+  lightTree->addOccupant(newLight);
 }
 
-void LightSystem::AddConvexHull(ConvexHull* newConvexHull)
+void LightSystem::addConvexHull(ConvexHull* newConvexHull)
 {
   convexHulls.insert(newConvexHull);
-  hullTree->AddOccupant(newConvexHull);
+  hullTree->addOccupant(newConvexHull);
 }
 
-void LightSystem::AddEmissiveLight(EmissiveLight* newEmissiveLight)
+void LightSystem::addEmissiveLight(EmissiveLight* newEmissiveLight)
 {
   emissiveLights.insert(newEmissiveLight);
-  emissiveTree->AddOccupant(newEmissiveLight);
+  emissiveTree->addOccupant(newEmissiveLight);
 }
 
-void LightSystem::RemoveLight(Light* pLight)
+void LightSystem::removeLight(Light* pLight)
 {
   std::unordered_set<Light*>::iterator it = lights.find(pLight);
 
   assert(it != lights.end());
 
-  (*it)->RemoveFromTree();
+  (*it)->removeFromTree();
 
   lights.erase(it);
 }
 
-void LightSystem::RemoveConvexHull(ConvexHull* pHull)
+void LightSystem::removeConvexHull(ConvexHull* pHull)
 {
   std::unordered_set<ConvexHull*>::iterator it = convexHulls.find(pHull);
 
   assert(it != convexHulls.end());
 
-  (*it)->RemoveFromTree();
+  (*it)->removeFromTree();
 
   convexHulls.erase(it);
 }
 
-void LightSystem::RemoveEmissiveLight(EmissiveLight* pEmissiveLight)
+void LightSystem::removeEmissiveLight(EmissiveLight* pEmissiveLight)
 {
   std::unordered_set<EmissiveLight*>::iterator it = emissiveLights.find(pEmissiveLight);
 
   assert(it != emissiveLights.end());
 
-  (*it)->RemoveFromTree();
+  (*it)->removeFromTree();
 
   emissiveLights.erase(it);
 }
 
-void LightSystem::ClearLights()
+void LightSystem::clearLights()
 {
   // Delete contents
   for(std::unordered_set<Light*>::iterator it = lights.begin(); it != lights.end(); it++)
@@ -426,10 +426,10 @@ void LightSystem::ClearLights()
   lights.clear();
 
   if(lightTree.get() != NULL)
-    lightTree->ClearTree(AABB(Vec2f(-50.0f, -50.0f), Vec2f(-50.0f, -50.0f)));
+    lightTree->clearTree(AABB(Vec2f(-50.0f, -50.0f), Vec2f(-50.0f, -50.0f)));
 }
 
-void LightSystem::ClearConvexHulls()
+void LightSystem::clearConvexHulls()
 {
   // Delete contents
   for(std::unordered_set<ConvexHull*>::iterator it = convexHulls.begin(); it != convexHulls.end(); it++)
@@ -438,10 +438,10 @@ void LightSystem::ClearConvexHulls()
   convexHulls.clear();
 
   if(hullTree.get() != NULL)
-    hullTree->ClearTree(AABB(Vec2f(-50.0f, -50.0f), Vec2f(-50.0f, -50.0f)));
+    hullTree->clearTree(AABB(Vec2f(-50.0f, -50.0f), Vec2f(-50.0f, -50.0f)));
 }
 
-void LightSystem::ClearEmissiveLights()
+void LightSystem::clearEmissiveLights()
 {
   // Delete contents
   for(std::unordered_set<EmissiveLight*>::iterator it = emissiveLights.begin(); it != emissiveLights.end(); it++)
@@ -450,14 +450,14 @@ void LightSystem::ClearEmissiveLights()
   emissiveLights.clear();
 
   if(emissiveTree.get() != NULL)
-    emissiveTree->ClearTree(AABB(Vec2f(-50.0f, -50.0f), Vec2f(-50.0f, -50.0f)));
+    emissiveTree->clearTree(AABB(Vec2f(-50.0f, -50.0f), Vec2f(-50.0f, -50.0f)));
 }
 
-void LightSystem::RenderLights()
+void LightSystem::renderLights()
 {
   lightTemp.setActive();
   glLoadIdentity();
-  CameraSetup();
+  cameraSetup();
 
   // Bind shadow texture for use later
   sf::Texture::bind(&softShadowTexture);
@@ -465,7 +465,7 @@ void LightSystem::RenderLights()
   renderTexture.setActive();
   renderTexture.clear(ambientColor);
   glLoadIdentity();
-  CameraSetup();
+  cameraSetup();
 
   renderTexture.pushGLStates();
 
@@ -477,7 +477,7 @@ void LightSystem::RenderLights()
             Vec2f(viewSize.x + viewCenter.x, viewSize.y + viewCenter.y));
 
   std::vector<QuadTreeOccupant*> visibleLights;
-  lightTree->Query(view, visibleLights);
+  lightTree->query(view, visibleLights);
 
   // Add lights from pre build list if there are any
   if(!lightsToPreBuild.empty())
@@ -506,14 +506,14 @@ void LightSystem::RenderLights()
 
     bool updateRequired = false;
 
-    if(pLight->AlwaysUpdate())
+    if(pLight->alwaysUpdate())
       updateRequired = true;
     else if(pLight->updateRequired)
       updateRequired = true;
 
     // Get hulls that the light affects
     std::vector<QuadTreeOccupant*> regionHulls;
-    hullTree->Query(*pLight->GetAABB(), regionHulls);
+    hullTree->query(*pLight->getAABB(), regionHulls);
 
     const unsigned int numHulls = regionHulls.size();
 
@@ -538,7 +538,7 @@ void LightSystem::RenderLights()
       Vec2f staticTextureOffset;
 
       // Activate the intermediate render Texture
-      if(pLight->AlwaysUpdate())
+      if(pLight->alwaysUpdate())
         lightTemp.setActive();
       else
       {
@@ -563,20 +563,20 @@ void LightSystem::RenderLights()
         {
           ConvexHull* pHull = static_cast<ConvexHull*>(regionHulls[h]);
 
-          Vec2f hullToLight(pLight->center - pHull->GetWorldCenter());
+          Vec2f hullToLight(pLight->center - pHull->getWorldCenter());
           hullToLight = hullToLight.normalize() * pLight->size;
 
-          if(!pHull->PointInsideHull(pLight->center - hullToLight))
-            MaskShadow(pLight, pHull, 2.0f);
+          if(!pHull->pointInsideHull(pLight->center - hullToLight))
+            maskShadow(pLight, pHull, 2.0f);
         }
       else
         for(unsigned int h = 0; h < numHulls; h++)
-          MaskShadow(pLight, static_cast<ConvexHull*>(regionHulls[h]), 2.0f);
+          maskShadow(pLight, static_cast<ConvexHull*>(regionHulls[h]), 2.0f);
 
       // Render the hulls only for the hulls that had
       // there shadows rendered earlier (not out of bounds)
       for(unsigned int h = 0; h < numHulls; h++)
-        static_cast<ConvexHull*>(regionHulls[h])->RenderHull(2.0f);
+        static_cast<ConvexHull*>(regionHulls[h])->renderHull(2.0f);
 
       glBlendFunc(GL_ONE, GL_ONE);
 
@@ -584,7 +584,7 @@ void LightSystem::RenderLights()
       glColorMask(true, true, true, true);
 
       // Render the current light
-      pLight->RenderLightSolidPortion(1.0f);
+      pLight->renderLightSolidPortion(1.0f);
 
       // Color reset
       glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -597,17 +597,17 @@ void LightSystem::RenderLights()
       const unsigned int numFins = finsToRender.size();
 
       for(unsigned int f = 0; f < numFins; f++)
-        finsToRender[f].Render(1.0f);
+        finsToRender[f].render(1.0f);
 
       // Soft light angle fins
-      pLight->RenderLightSoftPortion(1.0f);
+      pLight->renderLightSoftPortion(1.0f);
 
       glDisable(GL_TEXTURE_2D);
       glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
       glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
       // Now render that intermediate render Texture to the main render Texture
-      if(pLight->AlwaysUpdate())
+      if(pLight->alwaysUpdate())
       {
         lightTemp.display();
 
@@ -683,12 +683,12 @@ void LightSystem::RenderLights()
 
   std::vector<QuadTreeOccupant*> visibleEmissiveLights;
 
-  emissiveTree->Query(view, visibleEmissiveLights);
+  emissiveTree->query(view, visibleEmissiveLights);
 
   const unsigned int numEmissiveLights = visibleEmissiveLights.size();
 
   for(unsigned int i = 0; i < numEmissiveLights; i++)
-    static_cast<EmissiveLight*>(visibleEmissiveLights[i])->Render();
+    static_cast<EmissiveLight*>(visibleEmissiveLights[i])->render();
 
   // Reset
   renderTexture.popGLStates();
@@ -698,12 +698,12 @@ void LightSystem::RenderLights()
   pWin->setActive();
 }
 
-void LightSystem::BuildLight(Light* pLight)
+void LightSystem::buildLight(Light* pLight)
 {
   lightsToPreBuild.push_back(pLight);
 }
 
-void LightSystem::RenderLightTexture(float renderDepth)
+void LightSystem::renderLightTexture(float renderDepth)
 {
   sf::Vector2f viewSize(view.getSize());
   sf::Vector2u viewSizeui(static_cast<unsigned int>(viewSize.x), static_cast<unsigned int>(viewSize.y));

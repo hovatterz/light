@@ -15,7 +15,7 @@ Light_Beam::~Light_Beam()
 {
 }
 
-void Light_Beam::SetCenter(const Vec2f &newCenter)
+void Light_Beam::setCenter(const Vec2f &newCenter)
 {
   Vec2f diff(newCenter - center);
   center = newCenter;
@@ -27,7 +27,7 @@ void Light_Beam::SetCenter(const Vec2f &newCenter)
   outerPoint2 += diff;
 }
 
-void Light_Beam::UpdateDirectionAngle()
+void Light_Beam::updateDirectionAngle()
 {
   // Recalculate positions of points
   Vec2f innerComponents(cosf(directionAngle), sinf(directionAngle));
@@ -45,7 +45,7 @@ void Light_Beam::UpdateDirectionAngle()
   outerPoint2.y = innerPoint1.y + outerComponents2.y * radius;
 }
 
-void Light_Beam::RenderLightSolidPortion(float depth)
+void Light_Beam::renderLightSolidPortion(float depth)
 {
   assert(intensity > 0.0f && intensity <= 1.0f);
 
@@ -68,7 +68,7 @@ void Light_Beam::RenderLightSolidPortion(float depth)
   glEnd();
 }
 
-void Light_Beam::RenderLightSoftPortion(float depth)
+void Light_Beam::renderLightSoftPortion(float depth)
 {
   // If light goes all the way around do not render fins
   if(spreadAngle == 2.0f * M_PI || softSpreadAngle == 0.0f)
@@ -82,7 +82,7 @@ void Light_Beam::RenderLightSoftPortion(float depth)
   fin1.penumbra = Vec2f(radius * cosf(penumbraAngle1), radius * sinf(penumbraAngle1));
   fin1.rootPos = innerPoint1;
 
-  fin1.Render(depth);
+  fin1.render(depth);
 
   ShadowFin fin2;
 
@@ -91,10 +91,10 @@ void Light_Beam::RenderLightSoftPortion(float depth)
   fin2.penumbra = Vec2f(radius * cosf(penumbraAngle2), radius * sinf(penumbraAngle2));
   fin2.rootPos = innerPoint2;
 
-  fin2.Render(depth);
+  fin2.render(depth);
 }
 
-void Light_Beam::CalculateAABB()
+void Light_Beam::calculateAABB()
 {
   aabb.lowerBound = innerPoint1;
   aabb.upperBound = innerPoint1;

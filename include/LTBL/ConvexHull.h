@@ -45,27 +45,27 @@ class ConvexHull : public qdt::QuadTreeOccupant
 
   ConvexHull();
 
-  void CenterHull();
-  bool LoadShape(const char* fileName);
-  Vec2f GetWorldVertex(unsigned int index) const;
+  void centerHull();
+  bool loadShape(const char* fileName);
+  Vec2f getWorldVertex(unsigned int index) const;
 
-  void CalculateNormals();
+  void calculateNormals();
 
-  void RenderHull(float depth);
+  void renderHull(float depth);
 
-  void GenerateAABB();
+  void generateAABB();
 
-  bool HasGeneratedAABB();
+  bool hasGeneratedAABB();
 
-  void SetWorldCenter(const Vec2f &newCenter);
-  void IncWorldCenter(const Vec2f &increment);
+  void setWorldCenter(const Vec2f &newCenter);
+  void incWorldCenter(const Vec2f &increment);
 
-  Vec2f GetWorldCenter() const;
+  Vec2f getWorldCenter() const;
 
-  bool PointInsideHull(const Vec2f &point);
+  bool pointInsideHull(const Vec2f &point);
 };
 
-float GetFloatVal(std::string strConvert);
+float getFloatVal(std::string strConvert);
 }
 
 #endif

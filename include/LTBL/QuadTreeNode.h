@@ -7,11 +7,11 @@
 
 namespace qdt
 {
-const unsigned int maximumOccupants = 3;
-const unsigned int minimumOccupants = 1;
-const float oversizedMultiplier = 1.2f;
+const unsigned int MaximumOccupants = 3;
+const unsigned int MinimumOccupants = 1;
+const float OversizedMultiplier = 1.2f;
 
-const unsigned int maxLevels = 20;
+const unsigned int MaxLevels = 20;
 
 class QuadTree;
 
@@ -32,24 +32,24 @@ class QuadTreeNode {
 
   unsigned int level;
 
-  void Partition();
+  void partition();
 
-  void DestroyChildren();
+  void destroyChildren();
 
-  void Merge();
-  void GetOccupants(std::unordered_set<QuadTreeOccupant*> &upperOccupants, QuadTreeNode* newNode);
-  void GetOccupants(std::vector<QuadTreeOccupant*> &queryResult);
-  Point2i GetPossibleOccupantPos(QuadTreeOccupant* pOc);
+  void merge();
+  void getOccupants(std::unordered_set<QuadTreeOccupant*> &upperOccupants, QuadTreeNode* newNode);
+  void getOccupants(std::vector<QuadTreeOccupant*> &queryResult);
+  Point2i getPossibleOccupantPos(QuadTreeOccupant* pOc);
 
  public:
   QuadTreeNode(const AABB &newRegion, unsigned int numLevels, QuadTreeNode* pParent = NULL, QuadTree* pContainer = NULL);
   ~QuadTreeNode();
 
-  void AddOccupant(QuadTreeOccupant* pOc);
-  void Query(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult);
-  void QueryToDepth(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult, int depth);
+  void addOccupant(QuadTreeOccupant* pOc);
+  void query(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult);
+  void queryToDepth(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult, int depth);
 
-  void DebugRender();
+  void debugRender();
 
   friend class QuadTreeNode;
   friend class QuadTreeOccupant;

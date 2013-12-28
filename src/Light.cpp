@@ -14,20 +14,20 @@ Light::Light()
     color(1.0f, 1.0f, 1.0f),
     size(40.0f),
     directionAngle(0.0f), spreadAngle(2.0f * static_cast<float>(M_PI)), softSpreadAngle(static_cast<float>(M_PI) / 24.0f),
-    updateRequired(true), alwaysUpdate(true), pStaticTexture(NULL) // For static light
+    updateRequired(true), alwaysUpdate_(true), pStaticTexture(NULL) // For static light
 {
-  aabb.SetCenter(center);
-  aabb.SetDims(Vec2f(radius, radius));
+  aabb.setCenter(center);
+  aabb.setDims(Vec2f(radius, radius));
 }
 
 Light::~Light()
 {
   // Destroy the static Texture if one exists
-  if(alwaysUpdate)
+  if(alwaysUpdate_)
     delete pStaticTexture;
 }
 
-void Light::RenderLightSolidPortion(float depth)
+void Light::renderLightSolidPortion(float depth)
 {
   assert(intensity > 0.0f && intensity <= 1.0f);
 
@@ -44,19 +44,19 @@ void Light::RenderLightSolidPortion(float depth)
   // Set the edge color for rest of shape
   glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
 
-  int numSubdivisions = static_cast<int>(spreadAngle / lightSubdivisionSize);
+  int numSubdivisions = static_cast<int>(spreadAngle / LightSubdivisionSize);
   float startAngle = directionAngle - spreadAngle / 2.0f;
 
   for(int currentSubDivision = 0; currentSubDivision <= numSubdivisions; currentSubDivision++)
   {
-    float angle = startAngle + currentSubDivision * lightSubdivisionSize;
+    float angle = startAngle + currentSubDivision * LightSubdivisionSize;
     glVertex3f(radius * cosf(angle) + center.x, radius * sinf(angle) + center.y, depth); 
   }
 
   glEnd();
 }
 
-void Light::RenderLightSoftPortion(float depth)
+void Light::renderLightSoftPortion(float depth)
 {
   // If light goes all the way around do not render fins
   if(spreadAngle == 2.0f * M_PI || softSpreadAngle == 0.0f)
@@ -71,7 +71,7 @@ void Light::RenderLightSoftPortion(float depth)
   fin1.umbra = Vec2f(radius * cosf(umbraAngle1), radius * sinf(umbraAngle1));
   fin1.rootPos = center;
 
-  fin1.Render(depth);
+  fin1.render(depth);
 
   ShadowFin fin2;
 
@@ -81,10 +81,10 @@ void Light::RenderLightSoftPortion(float depth)
   fin2.umbra = Vec2f(radius * cosf(umbraAngle2), radius * sinf(umbraAngle2));
   fin2.rootPos = center;
 
-  fin2.Render(depth);
+  fin2.render(depth);
 }
 
-void Light::CalculateAABB()
+void Light::calculateAABB()
 {
   if(spreadAngle == 2 * M_PI)
   {
@@ -142,21 +142,21 @@ void Light::CalculateAABB()
   }
 }
 
-AABB* Light::GetAABB()
+AABB* Light::getAABB()
 {
   return &aabb;
 }
 
-bool Light::AlwaysUpdate()
+bool Light::alwaysUpdate()
 {
-  return alwaysUpdate;
+  return alwaysUpdate_;
 }
 
-void Light::SetAlwaysUpdate(bool always)
+void Light::setAlwaysUpdate(bool always)
 {
-  if(!always && alwaysUpdate) // If previously set to false, create a render Texture for the static texture
+  if(!always && alwaysUpdate_) // If previously set to false, create a render Texture for the static texture
   {
-    Vec2f dims = aabb.GetDims();
+    Vec2f dims = aabb.getDims();
 
     // Check if large enough textures are supported
     unsigned int maxDim = sf::Texture::getMaximumSize();
@@ -205,8 +205,8 @@ void Light::SetAlwaysUpdate(bool always)
 
     updateRequired = true;
   }
-  else if(always && !alwaysUpdate) // If previously set to true, destroy the render Texture
+  else if(always && !alwaysUpdate_) // If previously set to true, destroy the render Texture
     delete pStaticTexture;
 
-  alwaysUpdate = always;
+  alwaysUpdate_ = always;
 }

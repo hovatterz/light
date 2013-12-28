@@ -10,7 +10,7 @@ ShadowFin::~ShadowFin()
 {
 }
 
-void ShadowFin::Render(float depth)
+void ShadowFin::render(float depth)
 {
   glBegin(GL_TRIANGLES);
   glTexCoord2i(0, 1); glVertex3f(rootPos.x, rootPos.y, depth);

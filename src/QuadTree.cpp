@@ -14,10 +14,10 @@ QuadTree::~QuadTree()
   delete rootNode;
 }
 
-void QuadTree::AddOccupant(QuadTreeOccupant* pOc)
+void QuadTree::addOccupant(QuadTreeOccupant* pOc)
 {
-  if(rootNode->region.Contains(pOc->aabb)) // If it fits inside the root node
-    rootNode->AddOccupant(pOc);
+  if(rootNode->region.contains(pOc->aabb)) // If it fits inside the root node
+    rootNode->addOccupant(pOc);
   else // Otherwise, add it to the outside root set
   {
     outsideRoot.insert(pOc);
@@ -28,7 +28,7 @@ void QuadTree::AddOccupant(QuadTreeOccupant* pOc)
   }
 }
 
-void QuadTree::ClearTree(const AABB &newStartRegion)
+void QuadTree::clearTree(const AABB &newStartRegion)
 {
   delete rootNode;
   rootNode = new QuadTreeNode(newStartRegion, 1, NULL, this);
@@ -37,50 +37,50 @@ void QuadTree::ClearTree(const AABB &newStartRegion)
   outsideRoot.clear();
 }
 
-void QuadTree::Query(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult)
+void QuadTree::query(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult)
 {
   // First parse the occupants outside of the root and
   // add them to the array if the fit in the query region
   for(std::unordered_set<QuadTreeOccupant*>::iterator it = outsideRoot.begin(); it != outsideRoot.end(); it++)
-    if((*it)->aabb.Intersects(queryRegion))
+    if((*it)->aabb.intersects(queryRegion))
       queryResult.push_back(*it);
 
   // Then query the tree itself
-  rootNode->Query(queryRegion, queryResult);
+  rootNode->query(queryRegion, queryResult);
 }
 
-void QuadTree::QueryToDepth(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult, int depth)
+void QuadTree::queryToDepth(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult, int depth)
 {
   // First parse the occupants outside of the root and
   // add them to the array if the fit in the query region
   for(std::unordered_set<QuadTreeOccupant*>::iterator it = outsideRoot.begin(); it != outsideRoot.end(); it++)
-    if((*it)->aabb.Intersects(queryRegion))
+    if((*it)->aabb.intersects(queryRegion))
       queryResult.push_back(*it);
 
   // Then query the tree itself
-  rootNode->QueryToDepth(queryRegion, queryResult, depth);
+  rootNode->queryToDepth(queryRegion, queryResult, depth);
 }
 
-unsigned int QuadTree::GetNumOccupants()
+unsigned int QuadTree::getNumOccupants()
 {
   return rootNode->numOccupants;
 }
 
-AABB QuadTree::GetRootAABB()
+AABB QuadTree::getRootAABB()
 {
   return rootNode->region;
 }
 
-void QuadTree::DebugRender()
+void QuadTree::debugRender()
 {
   glColor4f(0.1f, 0.6f, 0.4f, 1.0f);
 
   // Parse all AABB's in the tree and render them
   for(std::unordered_set<QuadTreeOccupant*>::iterator it = outsideRoot.begin(); it != outsideRoot.end(); it++)
-    (*it)->aabb.DebugRender();
+    (*it)->aabb.debugRender();
 
   // Render the tree itself
-  rootNode->DebugRender();
+  rootNode->debugRender();
 
   glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }

@@ -18,22 +18,22 @@ struct AABB {
   AABB(const Vec2f &bottomLeft, const Vec2f &topRight);
 
   // Accessors
-  Vec2f GetCenter() const;
-  Vec2f GetDims() const;
-  Vec2f GetLowerBound() const;
-  Vec2f GetUpperBound() const;
+  Vec2f getCenter() const;
+  Vec2f getDims() const;
+  Vec2f getLowerBound() const;
+  Vec2f getUpperBound() const;
 
   // Modifiers
-  void SetCenter(const Vec2f &newCenter);
-  void IncCenter(const Vec2f &increment);
-  void SetDims(const Vec2f &newDims);
+  void setCenter(const Vec2f &newCenter);
+  void incCenter(const Vec2f &increment);
+  void setDims(const Vec2f &newDims);
 
   // Utility
-  bool Intersects(const AABB &other) const;
-  bool Contains(const AABB &other) const;
+  bool intersects(const AABB &other) const;
+  bool contains(const AABB &other) const;
 
   // Render the AABB for debugging purposes
-  void DebugRender();
+  void debugRender();
 
   friend struct AABB;
 };
@@ -51,8 +51,8 @@ class QuadTreeOccupant {
   virtual ~QuadTreeOccupant();
 
   // Call this whenever the AABB is modified or else stuff will break!
-  void UpdateTreeStatus();
-  void RemoveFromTree();
+  void updateTreeStatus();
+  void removeFromTree();
 
   friend class QuadTreeNode;
   friend class QuadTree;

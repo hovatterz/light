@@ -16,7 +16,7 @@ ConvexHull::ConvexHull() :
 {
 }
 
-void ConvexHull::CenterHull()
+void ConvexHull::centerHull()
 {
   // Calculate the average of all of the vertices, and then
   // offset all of them to make this the new origin position (0,0)
@@ -33,7 +33,7 @@ void ConvexHull::CenterHull()
     vertices[i].position -= averagePos;
 }
 
-bool ConvexHull::LoadShape(const char* fileName)
+bool ConvexHull::loadShape(const char* fileName)
 {
   std::ifstream load(fileName);
 
@@ -59,27 +59,27 @@ bool ConvexHull::LoadShape(const char* fileName)
       }
 
       ConvexHullVertex newVertex;
-      newVertex.position.x = static_cast<float>(GetFloatVal(firstElement));
-      newVertex.position.y = static_cast<float>(GetFloatVal(secondElement));
+      newVertex.position.x = static_cast<float>(getFloatVal(firstElement));
+      newVertex.position.y = static_cast<float>(getFloatVal(secondElement));
 
       vertices.push_back(newVertex);
     }
   }
 
-  CenterHull();
+  centerHull();
 
-  CalculateNormals();
+  calculateNormals();
 
   return true;
 }
 
-Vec2f ConvexHull::GetWorldVertex(unsigned int index) const
+Vec2f ConvexHull::getWorldVertex(unsigned int index) const
 {
   assert(index >= 0 && index < vertices.size());
   return Vec2f(vertices[index].position.x + worldCenter.x, vertices[index].position.y + worldCenter.y);
 }
 
-void ConvexHull::CalculateNormals()
+void ConvexHull::calculateNormals()
 {
   const unsigned int numVertices = vertices.size();
 
@@ -99,7 +99,7 @@ void ConvexHull::CalculateNormals()
   }
 }
 
-void ConvexHull::RenderHull(float depth)
+void ConvexHull::renderHull(float depth)
 {
   glBegin(GL_TRIANGLE_FAN);
 
@@ -107,14 +107,14 @@ void ConvexHull::RenderHull(float depth)
 
   for(unsigned int i = 0; i < numVertices; i++)
   {
-    Vec2f vPos(GetWorldVertex(i));
+    Vec2f vPos(getWorldVertex(i));
     glVertex3f(vPos.x, vPos.y, depth);
   }
 
   glEnd();
 }
 
-void ConvexHull::GenerateAABB()
+void ConvexHull::generateAABB()
 {
   assert(vertices.size() > 0);
 
@@ -141,35 +141,35 @@ void ConvexHull::GenerateAABB()
   aabbGenerated = true;
 }
 
-bool ConvexHull::HasGeneratedAABB()
+bool ConvexHull::hasGeneratedAABB()
 {
   return aabbGenerated;
 }
 
-void ConvexHull::SetWorldCenter(const Vec2f &newCenter)
+void ConvexHull::setWorldCenter(const Vec2f &newCenter)
 {
   worldCenter = newCenter;
 
-  aabb.SetCenter(worldCenter);
+  aabb.setCenter(worldCenter);
 
-  UpdateTreeStatus();
+  updateTreeStatus();
 }
 
-void ConvexHull::IncWorldCenter(const Vec2f &increment)
+void ConvexHull::incWorldCenter(const Vec2f &increment)
 {
   worldCenter += increment;
 
-  aabb.IncCenter(increment);
+  aabb.incCenter(increment);
 
-  UpdateTreeStatus();
+  updateTreeStatus();
 }
 
-Vec2f ConvexHull::GetWorldCenter() const
+Vec2f ConvexHull::getWorldCenter() const
 {
   return worldCenter;
 }
 
-bool ConvexHull::PointInsideHull(const Vec2f &point)
+bool ConvexHull::pointInsideHull(const Vec2f &point)
 {
   const unsigned int numVertices = vertices.size();
   int sgn = 0;
@@ -177,8 +177,8 @@ bool ConvexHull::PointInsideHull(const Vec2f &point)
   for(unsigned int i = 0; i < numVertices; i++)
   {
     int wrappedIndex = Wrap(i + 1, numVertices);
-    Vec2f currentVertex(GetWorldVertex(i));
-    Vec2f side(GetWorldVertex(wrappedIndex) - currentVertex);
+    Vec2f currentVertex(getWorldVertex(i));
+    Vec2f side(getWorldVertex(wrappedIndex) - currentVertex);
     Vec2f toPoint(point - currentVertex);
 
     float cpd = side.cross(toPoint);
@@ -194,7 +194,7 @@ bool ConvexHull::PointInsideHull(const Vec2f &point)
   return true;
 }
 
-float ltbl::GetFloatVal(std::string strConvert)
+float ltbl::getFloatVal(std::string strConvert)
 {
   return static_cast<float>(atof(strConvert.c_str()));
 }

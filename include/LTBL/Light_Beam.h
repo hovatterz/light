@@ -14,13 +14,13 @@ class Light_Beam : public Light {
   Light_Beam();
   ~Light_Beam();
 
-  void SetCenter(const Vec2f &newCenter);
-  void UpdateDirectionAngle();
+  void setCenter(const Vec2f &newCenter);
+  void updateDirectionAngle();
 
   // Overloaded from Light
-  void RenderLightSolidPortion(float depth);
-  void RenderLightSoftPortion(float depth);
-  void CalculateAABB();
+  void renderLightSolidPortion(float depth);
+  void renderLightSoftPortion(float depth);
+  void calculateAABB();
 };
 }
 
