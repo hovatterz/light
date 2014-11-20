@@ -5,12 +5,11 @@
 #include "Constructs.h"
 #include "QuadTree.h"
 
-#define _USE_MATH_DEFINES
-#include <math.h>
+const double PI = 3.14159265359;
 
 namespace ltbl
 {
-const float LightSubdivisionSize = static_cast<float>(M_PI) / 24.0f;
+const float LightSubdivisionSize = static_cast<float>(PI) / 24.0f;
 
 class LightSystem;
 
