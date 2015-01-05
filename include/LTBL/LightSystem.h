@@ -53,9 +53,9 @@ class LightSystem
 
   std::vector<Light*> lightsToPreBuild;
 
-  std::auto_ptr<qdt::QuadTree> lightTree;
-  std::auto_ptr<qdt::QuadTree> hullTree;
-  std::auto_ptr<qdt::QuadTree> emissiveTree;
+  std::unique_ptr<qdt::QuadTree> lightTree;
+  std::unique_ptr<qdt::QuadTree> hullTree;
+  std::unique_ptr<qdt::QuadTree> emissiveTree;
 
   sf::RenderTexture renderTexture;
   sf::RenderTexture lightTemp;
