@@ -1,18 +1,62 @@
-cmake_minimum_required(VERSION 1.8)
+cmake_minimum_required(VERSION 2.8)
 
 project(light)
 
+# Set options
+set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
+set(BUILD_SHARED_LIBS TRUE CACHE BOOL "TRUE to build light as shared libraries, FALSE to build it as static libraries")
+set(SFML_STATIC_LIBS FALSE CACHE BOOL "Choose whether SFML is linked statically or not.")
+set(LIGHT_STATIC_STD_LIBS FALSE CACHE BOOL "Use statically linked standard/runtime libraries? This option must match the one used for SFML.")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/cmake_modules" ${CMAKE_MODULE_PATH})
+
+# light uses C++11 features
+if(CMAKE_COMPILER_IS_GNUCXX)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif()
+
+# Make sure that the runtime library gets link statically
+if(LIGHT_STATIC_STD_LIBS)
+	if(NOT SFML_STATIC_LIBS)
+		message("\n-> If you check LIGHT_STATIC_STD_LIBS, you also need to check SFML_STATIC_LIBRARIES.")
+		message("-> It would lead to multiple runtime environments which result in undefined behavior.\n")
+	elseif(WIN32 AND MSVC)
+		# Change all MSVC compiler flags to /MT
+		foreach(flag CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
+			if(${flag} MATCHES "/MD")
+			string(REGEX REPLACE "/MD" "/MT" ${flag} "${${flag}}")
+			endif()
+		endforeach()
+	elseif(CMAKE_COMPILER_IS_GNUCXX)
+		# Note: Doesn't work for TDM compiler, since it's compiling the runtime libs statically by default
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++")
+	endif()
+endif()
+
+# Make sure that FindSFML.cmake searches for the static libraries
+if(SFML_STATIC_LIBS)
+	set(SFML_STATIC_LIBRARIES TRUE)
+endif()
 
 # Find OpenGL
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
+# Find the static GLEW library
+add_definitions("-DGLEW_STATIC")
 find_package(GLEW REQUIRED)
 include_directories(${GLEW_INCLUDE_PATH})
 
 # Find SFML
-find_package(SFML 2.0 REQUIRED system window graphics network audio)
+find_package(SFML 2 REQUIRED COMPONENTS graphics window system)
+
+# Output an error if SFML wasn't found
+if(SFML_FOUND)
+	include_directories(${SFML_INCLUDE_DIR})
+else()
+	set(SFML_ROOT "" CACHE PATH "SFML top-level directory")
+	message("\n-> SFML directory not found. Set SFML_ROOT to SFML's top-level path (containing \"include\" and \"lib\" directories).")
+	message("-> Make sure the SFML libraries with the same configuration (Release/Debug, Static/Dynamic) exist.\n")
+endif()
 
 # Project
 set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib")
@@ -29,8 +73,26 @@ set(light_SRC
     src/ShadowFin.cpp)
 include_directories("include")
 
-add_library(ltbl SHARED ${light_SRC})
-target_link_libraries(ltbl ${SFML_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARY})
+add_library(ltbl ${light_SRC})
+
+# Adjust the output file prefix/suffix to match our conventions
+if(BUILD_SHARED_LIBS)
+    if(WIN32)
+        set_target_properties(ltbl PROPERTIES DEBUG_POSTFIX -d)
+        if (CMAKE_COMPILER_IS_GNUCXX)
+            # on Windows/gcc get rid of "lib" prefix for shared libraries,
+            # and transform the ".dll.a" suffix into ".a" for import libraries
+            set_target_properties(ltbl PROPERTIES PREFIX "")
+            set_target_properties(ltbl PROPERTIES IMPORT_SUFFIX ".a")
+        endif()
+    endif()
+else()
+    set_target_properties(ltbl PROPERTIES DEBUG_POSTFIX -s-d)
+    set_target_properties(ltbl PROPERTIES RELEASE_POSTFIX -s)
+    set_target_properties(ltbl PROPERTIES MINSIZEREL_POSTFIX -s)
+endif()
+
+target_link_libraries(ltbl ${SFML_LIBRARIES} ${GLEW_LIBRARY} ${SFML_DEPENDENCIES} ${OPENGL_LIBRARIES})
 install(
     TARGETS ltbl
     RUNTIME DESTINATION bin COMPONENT bin

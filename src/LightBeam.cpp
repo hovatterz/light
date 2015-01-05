@@ -71,7 +71,7 @@ void LightBeam::renderLightSolidPortion(float depth)
 void LightBeam::renderLightSoftPortion(float depth)
 {
   // If light goes all the way around do not render fins
-  if(spreadAngle == 2.0f * M_PI || softSpreadAngle == 0.0f)
+  if(spreadAngle == 2.0f * PI || softSpreadAngle == 0.0f)
     return;
 
   // Create to shadow fins to mask off a portion of the light
