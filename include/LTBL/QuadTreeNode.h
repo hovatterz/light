@@ -50,8 +50,7 @@ class QuadTreeNode {
   void queryToDepth(const AABB &queryRegion, std::vector<QuadTreeOccupant*> &queryResult, int depth);
 
   void debugRender();
-
-  friend class QuadTreeNode;
+  
   friend class QuadTreeOccupant;
   friend class QuadTree;
 };
