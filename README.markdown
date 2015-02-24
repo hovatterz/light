@@ -7,17 +7,23 @@ I am not the original author of this code. I modified it to use the CMake
 build sytem and SFML 2.X. This has only been tested on OS X 10.7 Mavericks,
 so please submit any issues you have compiling on other systems.
 
-## Compiling
+## Compiling and Installing
 Do an out of source build. Specifically:
 
     mkdir build && cd build
     cmake ..
     make
 
-You can then say `bin/sample` to run the sample. I recommend using `build/`
-as your out of source build directory, because it is already on the
-`.gitignore`.
+# Ubuntu
+To do an out of source build in Ubuntu, follow the steps below:
 
+    sudo apt-get install build-essential cmake libsdl2-dev libglew-dev
+    cd /path/to/source
+    mkdir build && cd build
+    cmake ..
+    make && sudo make install    
+
+NOTE: Only tested in Ubuntu 14.10.
 
 ## Installing
 `make install`

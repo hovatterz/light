@@ -34,8 +34,6 @@ struct AABB {
 
   // Render the AABB for debugging purposes
   void debugRender();
-
-  friend struct AABB;
 };
 
 class QuadTreeOccupant {
