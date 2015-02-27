@@ -17,7 +17,7 @@ Do an out of source build. Specifically:
 # Ubuntu
 To do an out of source build in Ubuntu, follow the steps below:
 
-    sudo apt-get install build-essential cmake libsdl2-dev libglew-dev
+    sudo apt-get install build-essential cmake libsfml-dev libglew-dev
     cd /path/to/source
     mkdir build && cd build
     cmake ..
